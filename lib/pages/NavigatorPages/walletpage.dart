@@ -385,7 +385,6 @@ class _WalletPageState extends State<WalletPage> {
                                 decoration: BoxDecoration(
                                     color: darkModeSecContainer,
                                     borderRadius: BorderRadius.circular(10)),
-                                // color: textColor,
                                 child: Row(
                                   mainAxisAlignment:
                                   MainAxisAlignment.spaceEvenly,
@@ -697,7 +696,6 @@ class _WalletPageState extends State<WalletPage> {
                                       ),
                                       Button(
                                         onTap: () async {
-                                          // print(addMoney);
                                           FocusManager.instance.primaryFocus
                                               ?.unfocus();
                                           if (addMoney != 0 &&
@@ -737,7 +735,7 @@ class _WalletPageState extends State<WalletPage> {
                                   Container(
                                     padding:
                                     EdgeInsets.all(media.width * 0.05),
-                                    width: media.width * 0.8,
+                                    width: media.width * 0.9,
                                     height: media.height * 0.6,
                                     decoration: BoxDecoration(
                                         border: Border.all(
@@ -769,301 +767,269 @@ class _WalletPageState extends State<WalletPage> {
                                             const BouncingScrollPhysics(),
                                             child: Column(
                                               children: [
-                                                (walletBalance['stripe'] ==
-                                                    true)
+                                                // ===== ORANGE MONEY =====
+                                                Container(
+                                                  margin: EdgeInsets.only(bottom: media.width * 0.04),
+                                                  alignment: Alignment.center,
+                                                  width: media.width * 0.75,
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        _choosePayment = false;
+                                                        _addPayment = false;
+                                                        addMoney = null;
+                                                        addMoneyController.clear();
+                                                      });
+                                                      // TODO: intégrer Orange Money
+                                                    },
+                                                    child: Container(
+                                                      width: media.width * 0.75,
+                                                      height: media.width * 0.15,
+                                                      decoration: BoxDecoration(
+                                                        color: const Color(0xFFFF6600),
+                                                        borderRadius: BorderRadius.circular(12),
+                                                      ),
+                                                      alignment: Alignment.center,
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        children: [
+                                                          Image.asset(
+                                                            'assets/images/orange_money.png',
+                                                            height: media.width * 0.08,
+                                                            errorBuilder: (c, e, s) => Icon(Icons.phone_android, color: Colors.white, size: media.width * 0.06),
+                                                          ),
+                                                          SizedBox(width: media.width * 0.03),
+                                                          MyText(text: 'Orange Money', size: media.width * sixteen, fontweight: FontWeight.w700, color: Colors.white),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                // ===== MOOVE MONEY =====
+                                                Container(
+                                                  margin: EdgeInsets.only(bottom: media.width * 0.04),
+                                                  alignment: Alignment.center,
+                                                  width: media.width * 0.75,
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        _choosePayment = false;
+                                                        _addPayment = false;
+                                                        addMoney = null;
+                                                        addMoneyController.clear();
+                                                      });
+                                                      // TODO: intégrer Moove Money
+                                                    },
+                                                    child: Container(
+                                                      width: media.width * 0.75,
+                                                      height: media.width * 0.15,
+                                                      decoration: BoxDecoration(
+                                                        color: const Color(0xFF0066CC),
+                                                        borderRadius: BorderRadius.circular(12),
+                                                      ),
+                                                      alignment: Alignment.center,
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        children: [
+                                                          Image.asset(
+                                                            'assets/images/moove_money.png',
+                                                            height: media.width * 0.08,
+                                                            errorBuilder: (c, e, s) => Icon(Icons.account_balance_wallet, color: Colors.white, size: media.width * 0.06),
+                                                          ),
+                                                          SizedBox(width: media.width * 0.03),
+                                                          MyText(text: 'Moove Money', size: media.width * sixteen, fontweight: FontWeight.w700, color: Colors.white),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                // ===== CARTE BANCAIRE =====
+                                                Container(
+                                                  margin: EdgeInsets.only(bottom: media.width * 0.04),
+                                                  alignment: Alignment.center,
+                                                  width: media.width * 0.75,
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        _choosePayment = false;
+                                                        _addPayment = false;
+                                                        addMoney = null;
+                                                        addMoneyController.clear();
+                                                      });
+                                                      // TODO: intégrer Carte Bancaire
+                                                    },
+                                                    child: Container(
+                                                      width: media.width * 0.75,
+                                                      height: media.width * 0.15,
+                                                      decoration: BoxDecoration(
+                                                        color: const Color(0xFF1A1A2E),
+                                                        borderRadius: BorderRadius.circular(12),
+                                                        border: Border.all(color: Colors.white.withOpacity(0.3)),
+                                                      ),
+                                                      alignment: Alignment.center,
+                                                      child: Row(
+                                                        mainAxisAlignment: MainAxisAlignment.center,
+                                                        children: [
+                                                          Image.asset(
+                                                            'assets/images/carte_bancaire.png',
+                                                            height: media.width * 0.08,
+                                                            errorBuilder: (c, e, s) => Icon(Icons.credit_card, color: Colors.white, size: media.width * 0.06),
+                                                          ),
+                                                          SizedBox(width: media.width * 0.03),
+                                                          MyText(text: 'Carte Bancaire', size: media.width * sixteen, fontweight: FontWeight.w700, color: Colors.white),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                                // ===== ANCIENNES PASSERELLES (conservées, désactivées) =====
+                                                (walletBalance['stripe'] == false)
                                                     ? Container(
-                                                    margin: EdgeInsets.only(
-                                                        bottom:
-                                                        media.width *
-                                                            0.025),
-                                                    alignment:
-                                                    Alignment.center,
-                                                    width:
-                                                    media.width * 0.7,
+                                                    margin: EdgeInsets.only(bottom: media.width * 0.025),
+                                                    alignment: Alignment.center,
+                                                    width: media.width * 0.7,
                                                     child: InkWell(
                                                       onTap: () async {
-                                                        var val = await Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                const SelectWallet()));
+                                                        var val = await Navigator.push(context, MaterialPageRoute(builder: (context) => const SelectWallet()));
                                                         if (val) {
                                                           setState(() {
-                                                            _choosePayment =
-                                                            false;
-                                                            _addPayment =
-                                                            false;
-                                                            addMoney =
-                                                            null;
-                                                            addMoneyController
-                                                                .clear();
+                                                            _choosePayment = false;
+                                                            _addPayment = false;
+                                                            addMoney = null;
+                                                            addMoneyController.clear();
                                                           });
                                                         }
                                                       },
                                                       child: Container(
-                                                        width:
-                                                        media.width *
-                                                            0.25,
-                                                        height:
-                                                        media.width *
-                                                            0.125,
-                                                        decoration: const BoxDecoration(
-                                                            image: DecorationImage(
-                                                                image: AssetImage(
-                                                                    'assets/images/stripe-icon.png'),
-                                                                fit: BoxFit
-                                                                    .contain)),
+                                                        width: media.width * 0.25,
+                                                        height: media.width * 0.125,
+                                                        decoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/stripe-icon.png'), fit: BoxFit.contain)),
                                                       ),
                                                     ))
                                                     : Container(),
-                                                (walletBalance['paystack'] ==
-                                                    true)
+                                                (walletBalance['paystack'] == false)
                                                     ? Container(
-                                                    alignment:
-                                                    Alignment.center,
-                                                    margin: EdgeInsets.only(
-                                                        bottom:
-                                                        media.width *
-                                                            0.025),
-                                                    width:
-                                                    media.width * 0.7,
+                                                    alignment: Alignment.center,
+                                                    margin: EdgeInsets.only(bottom: media.width * 0.025),
+                                                    width: media.width * 0.7,
                                                     child: InkWell(
                                                       onTap: () async {
-                                                        var val = await Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                    PayStackPage()));
+                                                        var val = await Navigator.push(context, MaterialPageRoute(builder: (context) => PayStackPage()));
                                                         if (val) {
                                                           setState(() {
-                                                            _isLoading =
-                                                            true;
-                                                            _choosePayment =
-                                                            false;
-                                                            _addPayment =
-                                                            false;
-                                                            addMoney =
-                                                            null;
-                                                            addMoneyController
-                                                                .clear();
+                                                            _isLoading = true;
+                                                            _choosePayment = false;
+                                                            _addPayment = false;
+                                                            addMoney = null;
+                                                            addMoneyController.clear();
                                                           });
                                                           await getWallet();
                                                         }
                                                       },
                                                       child: Container(
-                                                        width:
-                                                        media.width *
-                                                            0.25,
-                                                        height:
-                                                        media.width *
-                                                            0.125,
-                                                        decoration: const BoxDecoration(
-                                                            image: DecorationImage(
-                                                                image: AssetImage(
-                                                                    'assets/images/paystack-icon.png'),
-                                                                fit: BoxFit
-                                                                    .contain)),
+                                                        width: media.width * 0.25,
+                                                        height: media.width * 0.125,
+                                                        decoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/paystack-icon.png'), fit: BoxFit.contain)),
                                                       ),
                                                     ))
                                                     : Container(),
-                                                (walletBalance[
-                                                'flutter_wave'] ==
-                                                    true)
+                                                (walletBalance['flutter_wave'] == false)
                                                     ? Container(
-                                                    margin: EdgeInsets.only(
-                                                        bottom:
-                                                        media.width *
-                                                            0.025),
-                                                    alignment:
-                                                    Alignment.center,
-                                                    width:
-                                                    media.width * 0.7,
+                                                    margin: EdgeInsets.only(bottom: media.width * 0.025),
+                                                    alignment: Alignment.center,
+                                                    width: media.width * 0.7,
                                                     child: InkWell(
                                                       onTap: () async {
-                                                        var val = await Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                    FlutterWavePage()));
+                                                        var val = await Navigator.push(context, MaterialPageRoute(builder: (context) => FlutterWavePage()));
                                                         if (val) {
                                                           setState(() {
-                                                            _choosePayment =
-                                                            false;
-                                                            _addPayment =
-                                                            false;
-                                                            addMoney =
-                                                            null;
-                                                            addMoneyController
-                                                                .clear();
+                                                            _choosePayment = false;
+                                                            _addPayment = false;
+                                                            addMoney = null;
+                                                            addMoneyController.clear();
                                                           });
                                                         }
                                                       },
                                                       child: Container(
-                                                        width:
-                                                        media.width *
-                                                            0.25,
-                                                        height:
-                                                        media.width *
-                                                            0.125,
-                                                        decoration: const BoxDecoration(
-                                                            image: DecorationImage(
-                                                                image: AssetImage(
-                                                                    'assets/images/flutterwave-icon.png'),
-                                                                fit: BoxFit
-                                                                    .contain)),
+                                                        width: media.width * 0.25,
+                                                        height: media.width * 0.125,
+                                                        decoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/flutterwave-icon.png'), fit: BoxFit.contain)),
                                                       ),
                                                     ))
                                                     : Container(),
-                                                (walletBalance['razor_pay'] ==
-                                                    true)
+                                                (walletBalance['razor_pay'] == false)
                                                     ? Container(
-                                                    margin: EdgeInsets.only(
-                                                        bottom:
-                                                        media.width *
-                                                            0.025),
-                                                    alignment:
-                                                    Alignment.center,
-                                                    width:
-                                                    media.width * 0.7,
+                                                    margin: EdgeInsets.only(bottom: media.width * 0.025),
+                                                    alignment: Alignment.center,
+                                                    width: media.width * 0.7,
                                                     child: InkWell(
                                                       onTap: () async {
-                                                        var val = await Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                    RazorPayPage()));
+                                                        var val = await Navigator.push(context, MaterialPageRoute(builder: (context) => RazorPayPage()));
                                                         if (val) {
                                                           setState(() {
-                                                            _choosePayment =
-                                                            false;
-                                                            _addPayment =
-                                                            false;
-                                                            addMoney =
-                                                            null;
-                                                            addMoneyController
-                                                                .clear();
+                                                            _choosePayment = false;
+                                                            _addPayment = false;
+                                                            addMoney = null;
+                                                            addMoneyController.clear();
                                                           });
                                                         }
                                                       },
                                                       child: Container(
-                                                        width:
-                                                        media.width *
-                                                            0.25,
-                                                        height:
-                                                        media.width *
-                                                            0.125,
-                                                        decoration: const BoxDecoration(
-                                                            image: DecorationImage(
-                                                                image: AssetImage(
-                                                                    'assets/images/razorpay-icon.jpeg'),
-                                                                fit: BoxFit
-                                                                    .contain)),
+                                                        width: media.width * 0.25,
+                                                        height: media.width * 0.125,
+                                                        decoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/razorpay-icon.jpeg'), fit: BoxFit.contain)),
                                                       ),
                                                     ))
                                                     : Container(),
-                                                (walletBalance[
-                                                'mercadopago'] ==
-                                                    true)
+                                                (walletBalance['mercadopago'] == false)
                                                     ? Container(
-                                                    margin: EdgeInsets.only(
-                                                        bottom:
-                                                        media.width *
-                                                            0.025),
-                                                    alignment:
-                                                    Alignment.center,
-                                                    width:
-                                                    media.width * 0.7,
+                                                    margin: EdgeInsets.only(bottom: media.width * 0.025),
+                                                    alignment: Alignment.center,
+                                                    width: media.width * 0.7,
                                                     child: InkWell(
                                                       onTap: () async {
-                                                        var val = await Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                    MercadoPago()));
+                                                        var val = await Navigator.push(context, MaterialPageRoute(builder: (context) => MercadoPago()));
                                                         if (val != null) {
                                                           if (val) {
                                                             setState(() {
-                                                              _isLoading =
-                                                              true;
-                                                              _choosePayment =
-                                                              false;
-                                                              _addPayment =
-                                                              false;
-                                                              addMoney =
-                                                              null;
-                                                              addMoneyController
-                                                                  .clear();
+                                                              _isLoading = true;
+                                                              _choosePayment = false;
+                                                              _addPayment = false;
+                                                              addMoney = null;
+                                                              addMoneyController.clear();
                                                             });
                                                             await getWallet();
                                                           }
                                                         }
                                                       },
                                                       child: Container(
-                                                        width:
-                                                        media.width *
-                                                            0.35,
-                                                        height:
-                                                        media.width *
-                                                            0.125,
-                                                        decoration: const BoxDecoration(
-                                                            image: DecorationImage(
-                                                                image: AssetImage(
-                                                                    'assets/images/mercadopago.png'),
-                                                                fit: BoxFit
-                                                                    .contain)),
+                                                        width: media.width * 0.35,
+                                                        height: media.width * 0.125,
+                                                        decoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/mercadopago.png'), fit: BoxFit.contain)),
                                                       ),
                                                     ))
                                                     : Container(),
-                                                (walletBalance['cash_free'] ==
-                                                    true)
+                                                (walletBalance['cash_free'] == false)
                                                     ? Container(
-                                                    margin: EdgeInsets.only(
-                                                        bottom:
-                                                        media.width *
-                                                            0.025),
-                                                    alignment:
-                                                    Alignment.center,
-                                                    width:
-                                                    media.width * 0.7,
+                                                    margin: EdgeInsets.only(bottom: media.width * 0.025),
+                                                    alignment: Alignment.center,
+                                                    width: media.width * 0.7,
                                                     child: InkWell(
                                                       onTap: () async {
-                                                        var val = await Navigator.push(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder:
-                                                                    (context) =>
-                                                                    CashFreePage()));
+                                                        var val = await Navigator.push(context, MaterialPageRoute(builder: (context) => CashFreePage()));
                                                         if (val) {
                                                           setState(() {
-                                                            _choosePayment =
-                                                            false;
-                                                            _addPayment =
-                                                            false;
-                                                            addMoney =
-                                                            null;
-                                                            addMoneyController
-                                                                .clear();
+                                                            _choosePayment = false;
+                                                            _addPayment = false;
+                                                            addMoney = null;
+                                                            addMoneyController.clear();
                                                           });
                                                         }
                                                       },
                                                       child: Container(
-                                                        width:
-                                                        media.width *
-                                                            0.25,
-                                                        height:
-                                                        media.width *
-                                                            0.125,
-                                                        decoration: const BoxDecoration(
-                                                            image: DecorationImage(
-                                                                image: AssetImage(
-                                                                    'assets/images/cashfree-icon.jpeg'),
-                                                                fit: BoxFit
-                                                                    .contain)),
+                                                        width: media.width * 0.25,
+                                                        height: media.width * 0.125,
+                                                        decoration: const BoxDecoration(image: DecorationImage(image: AssetImage('assets/images/cashfree-icon.jpeg'), fit: BoxFit.contain)),
                                                       ),
                                                     ))
                                                     : Container(),

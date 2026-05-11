@@ -481,7 +481,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                             }
                                           },
                                           text: languages[choosenLanguage]
-                                          ['text_support'],
+                                          ['text_support'] ?? 'Support',
                                           image:
                                           'assets/nav/support.png',
                                           isSos: true,

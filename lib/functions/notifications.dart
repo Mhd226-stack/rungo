@@ -71,7 +71,7 @@ Future<void> initMessaging() async {
     if (notification != null) {
       if (message.data['push_type'].toString() == 'general') {
         latestNotification = message.data['message'];
-        if (message.data['image'].isNotEmpty) {
+        if (message.data['image'] != null && message.data['image'].toString().isNotEmpty && !message.data['image'].toString().endsWith('/')) {
           _showBigPictureNotificationURLGeneral(message.data);
         } else {
           _showGeneralNotification(message.data);

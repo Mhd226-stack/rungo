@@ -2,31 +2,31 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>API_KEY</key>
-	<string>AIzaSyD8P6b1pipAN0gJYJsYpM7KE9BaJ-QE2q4</string>
-	<key>GCM_SENDER_ID</key>
-	<string>263496252822</string>
-	<key>PLIST_VERSION</key>
-	<string>1</string>
-	<key>BUNDLE_ID</key>
-	<string>com.clust.customer</string>
-	<key>PROJECT_ID</key>
-	<string>clust-fb544</string>
-	<key>STORAGE_BUCKET</key>
-	<string>clust-fb544.appspot.com</string>
-	<key>IS_ADS_ENABLED</key>
-	<false></false>
-	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
-	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
-	<key>IS_GCM_ENABLED</key>
-	<true></true>
-	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
-	<key>GOOGLE_APP_ID</key>
-	<string>1:263496252822:ios:c48a6ef215b10473ef31b7</string>
-	<key>DATABASE_URL</key>
-	<string>https://clust-fb544-default-rtdb.firebaseio.com</string>
+        <key>API_KEY</key>
+        <string>AIzaSyDqD2qeoQ0MGtf9lZy_6c-xE0ST5Fjt0ZU</string>
+        <key>GCM_SENDER_ID</key>
+        <string>698998642807</string>
+        <key>PLIST_VERSION</key>
+        <string>1</string>
+        <key>BUNDLE_ID</key>
+        <string>com.mhd.rungo</string>
+        <key>PROJECT_ID</key>
+        <string>rungo-598df</string>
+        <key>STORAGE_BUCKET</key>
+        <string>rungo-598df.firebasestorage.app</string>
+        <key>IS_ADS_ENABLED</key>
+        <false></false>
+        <key>IS_ANALYTICS_ENABLED</key>
+        <false></false>
+        <key>IS_APPINVITE_ENABLED</key>
+        <true></true>
+        <key>IS_GCM_ENABLED</key>
+        <true></true>
+        <key>IS_SIGNIN_ENABLED</key>
+        <true></true>
+        <key>GOOGLE_APP_ID</key>
+        <string>1:698998642807:ios:1910b73db6aa59f163ce72</string>
+        <key>DATABASE_URL</key>
+        <string>https://rungo-598df-default-rtdb.firebaseio.com</string>
 </dict>
 </plist>

@@ -752,10 +752,11 @@ class _EditProfileState extends State<EditProfile> {
                               SizedBox(height: media.width * 0.05),
                               Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                MainAxisAlignment.spaceBetween,
                                 children: [
-                                  ElevatedButton(
-                                      style : ButtonStyle(
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      style: ButtonStyle(
                                         backgroundColor: MaterialStateProperty.all<Color>(buttonColor),
                                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
@@ -765,15 +766,19 @@ class _EditProfileState extends State<EditProfile> {
                                         minimumSize: MaterialStateProperty.all<Size>(Size(media.width * 0.3, media.width * 0.12)),
                                       ),
                                       onPressed: () async {
-                                    await openAppSettings();
-                                  }, child: MyText(
-                                    text: languages[choosenLanguage]
-                                    ['text_open_settings'],
-                                    size: media.width * sixteen,
-                                    fontweight: FontWeight.w600,
-                                  )),
-                                  ElevatedButton(
-                                      style : ButtonStyle(
+                                        await openAppSettings();
+                                      },
+                                      child: MyText(
+                                        text: languages[choosenLanguage]['text_open_settings'],
+                                        size: media.width * sixteen,
+                                        fontweight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      style: ButtonStyle(
                                         backgroundColor: MaterialStateProperty.all<Color>(Color(0xff191B1A)),
                                         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
@@ -783,20 +788,21 @@ class _EditProfileState extends State<EditProfile> {
                                         minimumSize: MaterialStateProperty.all<Size>(Size(media.width * 0.3, media.width * 0.12)),
                                       ),
                                       onPressed: () async {
-                                    (_permission == 'noCamera')
-                                        ? pickImageFromCamera()
-                                        : pickImageFromGallery();
-                                    setState(() {
-                                      _permission = '';
-                                    });
-                                  }, child: MyText(
-                                    text: languages[choosenLanguage]
-                                    ['text_done'],
-                                    color: Colors.white,
-                                    size: media.width * sixteen,
-                                    fontweight: FontWeight.w600,
-                                  ))
-
+                                        (_permission == 'noCamera')
+                                            ? pickImageFromCamera()
+                                            : pickImageFromGallery();
+                                        setState(() {
+                                          _permission = '';
+                                        });
+                                      },
+                                      child: MyText(
+                                        text: languages[choosenLanguage]['text_done'],
+                                        color: Colors.white,
+                                        size: media.width * sixteen,
+                                        fontweight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               )
                             ],

@@ -967,7 +967,7 @@ class _HistoryDetailsState extends State<HistoryDetails> {
                                         ['data'][
                                         'requested_currency_symbol'] +
                                             ' ' +
-                                            '${int.parse(myHistory[selectedHistory]['request_eta_amount'].toString())}',
+                                            '${double.parse(myHistory[selectedHistory]['request_eta_amount'].toString()).toStringAsFixed(0)}',
                                         size: media.width * twelve,
                                       ),
                                     ],
@@ -1138,9 +1138,9 @@ class _HistoryDetailsState extends State<HistoryDetails> {
                                                             .spaceBetween,
                                                     children: [
                                                       MyText(
-                                                        text: generalComplaintList[
-                                                                complaintType]
-                                                            ['title'],
+                                                        text: generalComplaintList.isNotEmpty && complaintType < generalComplaintList.length
+                                                            ? generalComplaintList[complaintType]['title']
+                                                            : '',
                                                         size: media.width *
                                                             fourteen,
                                                       ),

@@ -14,6 +14,7 @@ import '../onTripPage/booking_confirmation.dart';
 import '../onTripPage/invoice.dart';
 import '../onTripPage/map_page.dart';
 import 'loading.dart';
+import 'package:lottie/lottie.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({Key? key}) : super(key: key);
@@ -22,19 +23,40 @@ class LoadingPage extends StatefulWidget {
   State<LoadingPage> createState() => _LoadingPageState();
 }
 
-class _LoadingPageState extends State<LoadingPage> {
+class _LoadingPageState extends State<LoadingPage>
+    with SingleTickerProviderStateMixin {
   String dot = '.';
   bool updateAvailable = false;
   dynamic _package;
   dynamic _version;
   bool _isLoading = false;
 
+  late AnimationController _animController;
+  late Animation<double> _scaleAnim;
+  late Animation<double> _fadeAnim;
+
   @override
   void initState() {
     super.initState();
-    // FIX : définit le français comme langue par défaut au premier lancement
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1500),
+    );
+    _scaleAnim = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(parent: _animController, curve: Curves.elasticOut),
+    );
+    _fadeAnim = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animController, curve: Curves.easeIn),
+    );
+    _animController.forward();
     _setDefaultLanguage();
     initApp();
+  }
+
+  @override
+  void dispose() {
+    _animController.dispose();
+    super.dispose();
   }
 
   // FIX : langue par défaut = français, second = anglais
@@ -45,15 +67,12 @@ class _LoadingPageState extends State<LoadingPage> {
     }
   }
 
-  // FIX 1 : getEmailmodule() ne bloque plus le reste en cas d'erreur
   initApp() async {
     try {
       await getEmailmodule();
     } catch (e) {
-      // On continue même si getEmailmodule échoue
       debugPrint("Erreur getEmailmodule (ignorée, on continue) : $e");
     }
-    // getLanguageDone s'exécute toujours
     await getLanguageDone();
   }
 
@@ -149,7 +168,7 @@ class _LoadingPageState extends State<LoadingPage> {
       child: Scaffold(
         body: Stack(
           children: [
-            // Couche 1 : Splash Screen (Logo)
+            // Couche 1 : Splash Screen (Lottie)
             Container(
               height: media.height,
               width: media.width,
@@ -157,10 +176,40 @@ class _LoadingPageState extends State<LoadingPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Lottie.asset(
+                    'assets/images/Delivery.json',
+                    width: media.width * 0.7,
+                    height: media.width * 0.7,
+                    fit: BoxFit.contain,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    'RUNGO',
+                    style: TextStyle(
+                      color: const Color(0xFFDA7756),
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 6,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Votre trajet, en un clic',
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2,
+                    ),
+                  ),
+                  const SizedBox(height: 60),
                   SizedBox(
-                    width: 85,
-                    height: 89.43,
-                    child: Image.asset('assets/images/logo.png'),
+                    width: 30,
+                    height: 30,
+                    child: CircularProgressIndicator(
+                      color: const Color(0xFFDA7756),
+                      strokeWidth: 2,
+                    ),
                   ),
                 ],
               ),

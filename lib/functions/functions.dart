@@ -2393,15 +2393,12 @@ cancelRequestWithReason(reason) async {
 }
 
 //making call to user
-
 makingPhoneCall(phnumber) async {
-  var mobileCall = 'tel:$phnumber';
-  // ignore: deprecated_member_use
-  if (await canLaunch(mobileCall)) {
-    // ignore: deprecated_member_use
-    await launch(mobileCall);
+  final mobileCall = Uri.parse('tel:$phnumber');
+  if (await canLaunchUrl(mobileCall)) {
+    await launchUrl(mobileCall);
   } else {
-    throw 'Could not launch $mobileCall';
+    debugPrint('Could not launch $mobileCall');
   }
 }
 

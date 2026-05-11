@@ -71,7 +71,7 @@ class _AboutState extends State<About> {
                     //terms and condition
                     InkWell(
                       onTap: () {
-                        openBrowser('https://clust.al/en/terms/');
+                        openBrowser('http://192.168.11.107/terms');
                       },
                       child: Text(
                         languages[choosenLanguage]['text_termsandconditions'],
@@ -87,7 +87,7 @@ class _AboutState extends State<About> {
                     //privacy policy
                     InkWell(
                       onTap: () {
-                        openBrowser('https://clust.al/en/privacy/');
+                        openBrowser('http://192.168.11.107/privacy');
                       },
                       child: Text(
                         languages[choosenLanguage]['text_privacy'],
@@ -102,7 +102,7 @@ class _AboutState extends State<About> {
                     ),
                     InkWell(
                       onTap: () {
-                        openBrowser('https://clust.al/');
+                        openBrowser('http://192.168.11.107/');
                       },
                       child: Text(
                         languages[choosenLanguage]['text_about'],

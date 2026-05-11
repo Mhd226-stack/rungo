@@ -111,6 +111,7 @@ class _MapsState extends State<Maps>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!mounted) return;
     if (state == AppLifecycleState.resumed) {
       _bottom = 0;
       if (mounted) setState(() {});
@@ -754,7 +755,7 @@ class _MapsState extends State<Maps>
                                                                       fit: BoxFit.cover,
                                                                         height: 40,
                                                                         width : 40
-                                                                   
+
                                                                     ),
                                                                     const SizedBox(
                                                                       height:
@@ -955,8 +956,8 @@ class _MapsState extends State<Maps>
                                                                   InkWell(
                                                                     onTap:
                                                                         () async {
-                                                                      // var whatsappUrl =
-                                                                      //     "whatsapp://send?phone=${userDetails['contact_us_mobile1']}";
+                                                                         var whatsappUrl =
+                                                                           "whatsapp://send?phone=${userDetails['contact_us_mobile1']}";
                                                                       String
                                                                           url =
                                                                           "https://wa.me/${userDetails['contact_us_mobile1']}/?text=''}";
@@ -1348,18 +1349,24 @@ class _MapsState extends State<Maps>
                                                                             height:
                                                                                 media.width * 0.02,
                                                                           ),
-                                                                          SizedBox(
-                                                                            height:
-                                                                                media.width * 0.06,
-                                                                            child:
-                                                                                Column(
-                                                                              children: [
-                                                                                Expanded(
-                                                                                  child: Row(
-                                                                                    children: [
-                                                                                      Container(
-                                                                                        height: media.width * 0.04,
-                                                                                        width: media.width * 0.04,
+                                                                          Container(width: media.width * 0.86,
+                                                                          padding: EdgeInsets.symmetric(horizontal: media.width * 0.03, vertical: media.width * 0.01),
+                                                                          decoration: BoxDecoration(
+                                                                          borderRadius: BorderRadius.circular(media.width * 0.03),
+                                                                          color: darkModeSecContainer,
+                                                                  ),
+                                                                  child: SizedBox(
+                                                                    height:
+                                                                    media.width * 0.1,
+                                                                    child:
+                                                                    Column(
+                                                                      children: [
+                                                                        Expanded(
+                                                                          child: Row(
+                                                                            children: [
+                                                                              Container(
+                                                                                height: media.width * 0.04,
+                                                                                width: media.width * 0.04,
                                                                                         alignment: Alignment.center,
                                                                                         decoration: BoxDecoration(
                                                                                             image: DecorationImage(
@@ -1447,16 +1454,16 @@ class _MapsState extends State<Maps>
                                                                                 )
                                                                               ],
                                                                             ),
+                                                                  )),
+                                                                          SizedBox(
+                                                                            height:
+                                                                            media.width * 0.02,
                                                                           ),
                                                                           SizedBox(
                                                                             height:
-                                                                                media.width * 0.03,
-                                                                          ),
-                                                                          SizedBox(
-                                                                            height:
-                                                                                media.width * 0.06,
+                                                                            media.width * 0.07,
                                                                             child:
-                                                                                Column(
+                                                                            Column(
                                                                               children: [
                                                                                 Expanded(
                                                                                   child: Row(
@@ -1777,7 +1784,7 @@ class _MapsState extends State<Maps>
                                                                                 (route) => false);
 
                                                                             dropAddress =
-                                                                                'Tirana International Airport, Ruga Nene Tereza, Rinas 1504, Albania';
+                                                                                'Aéroport International de Ouagadougou-Burkina Faso';
                                                                           }
                                                                         }
                                                                       },
@@ -1831,7 +1838,7 @@ class _MapsState extends State<Maps>
                                                                                   SizedBox(
                                                                                     width: media.width * 0.8,
                                                                                     child: MyText(
-                                                                                      text: 'Tirana International Airport, Ruga Nene Tereza, Rinas 1504, Albania',
+                                                                                      text: 'Aéroport International de Ouagadougou-Burkina Faso',
                                                                                       size: 15,
                                                                                       maxLines: 2,
                                                                                       fontweight: FontWeight.w400,

@@ -108,7 +108,7 @@ class _SupportPageState extends State<SupportPage> {
                               button: false,
                               onTap: () {
                                     openBrowser(
-                                        'https://clust.al/en/privacy/');
+                                        'http://192.168.11.107/privacy');
                               }),
                           ButtonBottomSpace(
                             height: 4,

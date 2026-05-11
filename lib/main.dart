@@ -4,6 +4,7 @@ import 'functions/functions.dart';
 import 'functions/notifications.dart';
 import 'pages/loadingPage/loadingpage.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'firebase_options.dart';
 
@@ -19,6 +20,7 @@ void main() async {
         options: DefaultFirebaseOptions.currentPlatform,
       );
     }
+    await FirebaseAuth.instance.setLanguageCode('fr');
   } catch (e) {
     print("Firebase est déjà initialisé ou une erreur est survenue : $e");
   }
@@ -43,9 +45,9 @@ class MyApp extends StatelessWidget {
           currentFocus.unfocus();
         }
       },
-      child: MaterialApp( // Retire le ValueListenableBuilder temporairement pour tester
+      child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Rungo', // Petit clin d'oeil à ton projet ;)
+          title: 'Rungo',
           theme: ThemeData.dark(),
           home: const LoadingPage()),
     );

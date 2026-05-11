@@ -147,9 +147,9 @@ class _BookingConfirmationState extends State<BookingConfirmation>
         .listen((event) async {
       if (event.snapshot.value == null) return;
       rideRequest = event.snapshot.value as Map;
-      String currentCallingStatus = rideRequest[callingStatus];
-      bool shouldShowIncommingCallScreen = rideRequest[shouldShowIncommingCall];
-      bool isDriverCalling = rideRequest['driver'] ?? false;
+      String currentCallingStatus = rideRequest[callingStatus]?.toString() ?? '';
+      bool shouldShowIncommingCallScreen = rideRequest[shouldShowIncommingCall] == true;
+      bool isDriverCalling = rideRequest['driver'] == true;
 
       if (isDriverCalling == true &&
           currentCallingStatus == callingStatusIncomming &&
@@ -214,11 +214,11 @@ class _BookingConfirmationState extends State<BookingConfirmation>
               userRequestData['accepted_at'] == null &&
               timing == 0) {
             var val = await cancelRequest();
-
-            setState(() {
-              noDriverFound = true;
-            });
-
+            if (mounted) {
+              setState(() {
+                noDriverFound = true;
+              });
+            }
             timer.cancel();
             timing = null;
             if (val == 'logout') {
@@ -4843,7 +4843,7 @@ class _BookingConfirmationState extends State<BookingConfirmation>
                                                                             6,
                                                                       ),
                                                                       Text(
-                                                                        '${Duration(seconds: timing).toString().substring(3, 7)}',
+                                                                        '${Duration(seconds: timing ?? 0).toString().substring(3, 7)}',
                                                                         style: GoogleFonts.inter(
                                                                             fontSize:
                                                                                 17,
@@ -5163,14 +5163,27 @@ class _BookingConfirmationState extends State<BookingConfirmation>
                                                               ),
                                                               MyText(
                                                                 text:
-                                                                    '${userRequestData['driverDetail']['data']['car_make_name']},${userRequestData['driverDetail']['data']['car_model_name']}',
+                                                                '${userRequestData['driverDetail']['data']['car_make_name']},${userRequestData['driverDetail']['data']['car_model_name']}',
                                                                 size: 12,
                                                                 maxLines: 1,
                                                                 fontweight:
-                                                                    FontWeight
-                                                                        .w400,
+                                                                FontWeight
+                                                                    .w400,
                                                                 color: Color(
                                                                     0xff929292),
+                                                              ),
+                                                              SizedBox(height: 3),
+                                                              Row(
+                                                                children: [
+                                                                  Icon(Icons.phone, size: 12, color: Color(0xff929292)),
+                                                                  SizedBox(width: 4),
+                                                                  MyText(
+                                                                    text: userRequestData['driverDetail']['data']['mobile'].toString(),
+                                                                    size: 12,
+                                                                    fontweight: FontWeight.w400,
+                                                                    color: Color(0xff929292),
+                                                                  ),
+                                                                ],
                                                               ),
                                                             ],
                                                           ),

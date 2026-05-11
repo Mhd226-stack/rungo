@@ -105,7 +105,7 @@ class _AggreementPageState extends State<AggreementPage> {
                                         fontWeight: FontWeight.w400),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    openBrowser('https://clust.al/en/privacy/');
+                                    openBrowser('http://192.168.11.107/privacy');
                                   }),
                             TextSpan(
                                 text: languages[choosenLanguage]
@@ -124,7 +124,7 @@ class _AggreementPageState extends State<AggreementPage> {
                                         fontWeight: FontWeight.w400),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    openBrowser('https://clust.al/en/privacy/');
+                                    openBrowser('http://192.168.11.107/privacy');
                                   }),
                           ],
                         ),
