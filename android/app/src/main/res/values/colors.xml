@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="splash_color">
-        #DA7756</color>
+        #FFB800</color>
     <color name="ic_launcher_background">
-        #DA7756</color>
+        #FFB800</color>
 </resources>

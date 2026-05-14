@@ -298,7 +298,9 @@ phoneAuth(String phone) async {
       forceResendingToken: resendTokenId,
       verificationFailed: (FirebaseAuthException e) {
         if (e.code == 'invalid-phone-number') {
-          debugPrint('The provided phone number is not valid.');
+          throw FirebaseAuthException(code: 'invalid-phone-number', message: 'Le numéro de téléphone est invalide.');
+        } else {
+          throw FirebaseAuthException(code: e.code, message: e.message);
         }
       },
       codeSent: (String verificationId, int? resendToken) async {

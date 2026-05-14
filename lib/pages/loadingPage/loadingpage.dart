@@ -186,7 +186,7 @@ class _LoadingPageState extends State<LoadingPage>
                   Text(
                     'RUNGO',
                     style: TextStyle(
-                      color: const Color(0xFFDA7756),
+                      color: const Color(0xFFFFB800),
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 6,
@@ -196,7 +196,7 @@ class _LoadingPageState extends State<LoadingPage>
                   Text(
                     'Votre trajet, en un clic',
                     style: TextStyle(
-                      color: Colors.black87,
+                      color: Colors.green,
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2,
