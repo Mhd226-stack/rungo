@@ -2133,7 +2133,7 @@ class _MapsState extends State<Maps>
                                                                                     decoration: BoxDecoration(
                                                                                       borderRadius: BorderRadius.circular(3000),
                                                                                       border: Border.all(color: buttonColor),
-                                                                                      color: buttonColor.withOpacity(0.2),
+                                                                                      color: const Color(0xffFCB13D),
                                                                                     ),
                                                                                     child: Row(
                                                                                       mainAxisAlignment: MainAxisAlignment.center,
