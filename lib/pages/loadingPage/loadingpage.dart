@@ -15,6 +15,7 @@ import '../onTripPage/invoice.dart';
 import '../onTripPage/map_page.dart';
 import 'loading.dart';
 import 'package:lottie/lottie.dart';
+import '../homePage/home_page.dart';
 
 class LoadingPage extends StatefulWidget {
   const LoadingPage({Key? key}) : super(key: key);
@@ -68,10 +69,12 @@ class _LoadingPageState extends State<LoadingPage>
   }
 
   initApp() async {
+    await Future.delayed(const Duration(seconds: 2));
+
     try {
       await getEmailmodule();
     } catch (e) {
-      debugPrint("Erreur getEmailmodule (ignorée, on continue) : $e");
+      debugPrint("Erreur getEmailmodule (ignorée) : $e");
     }
     await getLanguageDone();
   }
@@ -99,7 +102,7 @@ class _LoadingPageState extends State<LoadingPage>
     } else {
       Navigator.pushAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (context) => const Maps()),
+          MaterialPageRoute(builder: (context) => const RungoHomePage()),
               (route) => false);
     }
   }

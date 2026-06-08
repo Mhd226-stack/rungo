@@ -71,7 +71,7 @@ class _AboutState extends State<About> {
                     //terms and condition
                     InkWell(
                       onTap: () {
-                        openBrowser('http://192.168.11.107/terms');
+                        openBrowser('https://mhd226-stack.github.io/rungo-privacy/');
                       },
                       child: Text(
                         languages[choosenLanguage]['text_termsandconditions'],
@@ -87,7 +87,7 @@ class _AboutState extends State<About> {
                     //privacy policy
                     InkWell(
                       onTap: () {
-                        openBrowser('http://192.168.11.107/privacy');
+                        openBrowser('https://mhd226-stack.github.io/rungo-privacy/');
                       },
                       child: Text(
                         languages[choosenLanguage]['text_privacy'],
@@ -102,7 +102,7 @@ class _AboutState extends State<About> {
                     ),
                     InkWell(
                       onTap: () {
-                        openBrowser('http://192.168.11.107/');
+                        openBrowser('https://rungobf.com/');
                       },
                       child: Text(
                         languages[choosenLanguage]['text_about'],

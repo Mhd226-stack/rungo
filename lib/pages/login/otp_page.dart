@@ -15,6 +15,7 @@ import '../onTripPage/invoice.dart';
 import '../onTripPage/map_page.dart';
 import 'login.dart';
 import 'namepage.dart';
+import '../homePage/home_page.dart';
 
 class Otp extends StatefulWidget {
   final dynamic from;
@@ -84,8 +85,8 @@ class _OtpState extends State<Otp> with TickerProviderStateMixin {
       } else {
         Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const Maps()),
-            (route) => false);
+            MaterialPageRoute(builder: (context) => const RungoHomePage()),
+                (route) => false);
       }
     } else if (verify == false) {
       if (Verifyemail == true) {
@@ -469,9 +470,16 @@ class _OtpState extends State<Otp> with TickerProviderStateMixin {
                               if (result == 'success') {
                                 isfromomobile = false;
                                 _error = '';
+
                                 var verify = await verifyUser(email);
-                                value = 1;
-                                navigate(verify);
+
+                                if (verify == true) {
+                                  value = 0;
+                                  navigate(true);
+                                } else {
+                                  value = 1;
+                                  navigate(false);
+                                }
                               } else {
                                 setState(() {
                                   _pinPutController2.clear();

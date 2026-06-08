@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'dart:math';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -31,6 +32,18 @@ import '../pages/onTripPage/review_page.dart';
 import '../pages/referralcode/referral_code.dart';
 import '../styles/styles.dart';
 
+// Client HTTP personnalisé
+final httpClient = http.Client();
+
+final dio = Dio(BaseOptions(
+  connectTimeout: Duration(seconds: 30),
+  receiveTimeout: Duration(seconds: 30),
+  headers: {
+    'Accept': 'application/json',
+    'User-Agent': 'Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36 Chrome/91.0.4472.120 Mobile Safari/537.36',
+  },
+));
+
 //languages code
 dynamic package;
 dynamic phcode;
@@ -43,11 +56,11 @@ bool internet = true;
 
 //base url
 /// for Production
-String base_url = 'http://192.168.11.107/';
-String url = base_url;//add '/' at the end of the url as 'https://url.com/'
+String base_url = 'https://rungobf.com/';
+String url = base_url;
 
 // /// for Development
-// String url = 'https://dev.clust.al/'; //add '/' at the end of the url as 'https://url.com/'
+// String url = 'https://rungobf.com/; //add '/' at the end of the url as 'https://url.com/'
 String mapkey = 'AIzaSyBWlSP098N9_jnbpaQ9aKJHApMxfG7q3no';
 
 //check internet connection
@@ -228,34 +241,25 @@ List countries = [];
 getCountryCode() async {
   dynamic result;
   try {
-    final response = await http.get(Uri.parse('${url}api/v1/countries'))
-        .timeout(const Duration(seconds: 30));
-
+    final response = await dio.get('${url}api/v1/countries');
     if (response.statusCode == 200) {
-      var decodedData = jsonDecode(response.body);
-
+      var decodedData = response.data;
       if (decodedData['data'] != null) {
         countries = decodedData['data'];
-
         if (countries.isNotEmpty) {
           phcode = (countries.where((element) => element['default'] == true).isNotEmpty)
               ? countries.indexWhere((element) => element['default'] == true)
               : 0;
           result = 'success';
         } else {
-          debugPrint('La liste des pays est vide');
           result = 'empty';
         }
       } else {
         result = 'error';
       }
-    } else {
-      debugPrint('Erreur Serveur: ${response.statusCode}');
-      result = 'error';
     }
   } catch (e) {
     debugPrint('Erreur getCountryCode: $e');
-    // FIX : pays par défaut Burkina Faso si serveur injoignable
     if (countries.isEmpty) {
       countries = [
         {
@@ -270,12 +274,8 @@ getCountryCode() async {
       ];
       phcode = 0;
     }
-    if (e is SocketException || e is TimeoutException) {
-      internet = false;
-      result = 'no internet';
-    } else {
-      result = 'error';
-    }
+    internet = false;
+    result = 'no internet';
   }
   return result;
 }
@@ -496,7 +496,7 @@ registerUser() async {
       'email_confirmed': (value == 0) ? '0' : '1'
 
       //       "name": 'Afrim',
-      //   "mobile": '364028765',
+      //   "mobile": '+22673640765',
       //   "email": 'afrim1265@gmail.com',
       //   "device_token": fcm,
       // "country": countries[phcode]['code'],
@@ -676,7 +676,39 @@ userLogin() async {
     }
   }
 }
-
+userLoginWithEmail(String emailAddress) async {
+  bearerToken.clear();
+  dynamic result;
+  try {
+    var token = await FirebaseMessaging.instance.getToken();
+    var fcm = token.toString();
+    var response = await http.post(Uri.parse('${url}api/v1/user/login'),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          "email": emailAddress,
+          'device_token': fcm,
+          "login_by": (platform == TargetPlatform.android) ? 'android' : 'ios',
+        }));
+    if (response.statusCode == 200) {
+      var jsonVal = jsonDecode(response.body);
+      bearerToken.add(BearerClass(
+          type: jsonVal['token_type'].toString(),
+          token: jsonVal['access_token'].toString()));
+      result = true;
+      pref.setString('Bearer', bearerToken[0].token);
+    } else {
+      debugPrint(response.body);
+      result = false;
+    }
+    return result;
+  } catch (e) {
+    if (e is SocketException) {
+      internet = false;
+    }
+  }
+}
 Map<String, dynamic> userDetails = {};
 List favAddress = [];
 List tripStops = [];
@@ -3951,21 +3983,39 @@ sendOTPtoEmail(String email) async {
 emailVerify(String email, otpNumber) async {
   dynamic val;
   try {
-    var response = await http.post(Uri.parse('${url}api/v1/validate-email-otp'),
+    var response = await http.post(
+        Uri.parse('${url}api/v1/validate-email-otp'),
         body: {"email": email, "otp": otpNumber});
+
     if (response.statusCode == 200) {
       if (jsonDecode(response.body)['success'] == true) {
-        val = 'success';
+        var checkResponse = await http.post(
+            Uri.parse('${url}api/v1/user/validate-mobile-for-login'),
+            body: {"email": email});
+
+        if (checkResponse.statusCode == 200) {
+          bool exists = jsonDecode(checkResponse.body)['success'] == true;
+          if (exists) {
+            var loginCheck = await userLoginWithEmail(email); // ← ICI
+            if (loginCheck == true) {
+              await getUserDetails();
+              val = 'login';
+            } else {
+              val = 'failed';
+            }
+          } else {
+            val = 'success';
+          }
+        } else {
+          val = 'success';
+        }
       } else {
-        debugPrint(response.body);
         val = 'failed';
       }
     }
     return val;
   } catch (e) {
-    if (e is SocketException) {
-      internet = false;
-    }
+    if (e is SocketException) internet = false;
   }
 }
 
@@ -4014,18 +4064,11 @@ String isemailmodule = '1';
 getEmailmodule() async {
   dynamic res;
   try {
-    // Utilise la nouvelle route config que nous avons créée ensemble
-    final response = await http.get(
-      Uri.parse('${url}api/v1/config'),
-    ).timeout(const Duration(seconds: 30));
-
+    final response = await dio.get('${url}api/v1/config');
     if (response.statusCode == 200) {
-      var data = jsonDecode(response.body);
-      // On récupère la valeur enable_email_otp depuis ton JSON Laravel
-      isemailmodule = data['enable_email_otp'].toString();
+      isemailmodule = response.data['enable_email_otp'].toString();
       res = 'success';
     } else {
-      debugPrint("Erreur Serveur: ${response.statusCode}");
       res = 'failed';
     }
   } catch (e) {
