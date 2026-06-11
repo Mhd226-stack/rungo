@@ -265,7 +265,10 @@ class _OtpState extends State<Otp> with TickerProviderStateMixin {
                                 Pinput(
                                   length: 6,
                                   onChanged: (val) {
-                                    otpNumber = _pinPutController2.text;
+                                    otpNumber = val;
+                                  },
+                                  onCompleted: (val) {
+                                    otpNumber = val;
                                   },
                                   // onSubmitted: (String val) {},
                                   controller: _pinPutController2,
@@ -470,16 +473,13 @@ class _OtpState extends State<Otp> with TickerProviderStateMixin {
                               if (result == 'success') {
                                 isfromomobile = false;
                                 _error = '';
-
-                                var verify = await verifyUser(email);
-
-                                if (verify == true) {
-                                  value = 0;
-                                  navigate(true);
-                                } else {
-                                  value = 1;
-                                  navigate(false);
-                                }
+                                value = 1;
+                                navigate(false);
+                              } else if (result == 'login') {
+                                isfromomobile = false;
+                                _error = '';
+                                value = 0;
+                                navigate(true);
                               } else {
                                 setState(() {
                                   _pinPutController2.clear();

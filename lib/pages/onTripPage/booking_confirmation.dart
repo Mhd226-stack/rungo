@@ -34,9 +34,7 @@ import 'drop_loc_select.dart';
 import 'invoice.dart';
 import 'map_page.dart';
 
-// ignore: must_be_immutable
 class BookingConfirmation extends StatefulWidget {
-  // const BookingConfirmation({Key? key}) : super(key: key);
   dynamic type;
 
   //type = 1 is rental ride and type = null is regular ride
@@ -76,6 +74,8 @@ Set<Polyline> sourceToDestPolylines = {};
 
 class _BookingConfirmationState extends State<BookingConfirmation>
     with WidgetsBindingObserver, TickerProviderStateMixin {
+  Stream<DatabaseEvent>? _driverStream;
+  String? _lastDriverId;
   TextEditingController promoKey = TextEditingController();
   final Map minutes = {};
   List myMarker = [];
@@ -121,7 +121,17 @@ class _BookingConfirmationState extends State<BookingConfirmation>
   StreamSink<List<Marker>> get _mapMarkerSink => _mapMarkerSC.sink;
   Stream<List<Marker>> get mapMarkerStream => _mapMarkerSC.stream;
   bool dropConfirmed = false;
-
+  void _updateDriverStream(String lower, String higher) {
+    if (_lastDriverId == '$lower$higher') return;
+    _lastDriverId = '$lower$higher';
+    _driverStream = FirebaseDatabase.instance
+        .ref('drivers')
+        .orderByChild('g')
+        .startAt(lower)
+        .endAt(higher)
+        .onValue
+        .asBroadcastStream();
+  }
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
@@ -194,7 +204,7 @@ class _BookingConfirmationState extends State<BookingConfirmation>
     _controller?.dispose();
     _controller = null;
     animationController?.dispose();
-
+    _driverStream = null;
     super.dispose();
   }
 
@@ -783,8 +793,8 @@ class _BookingConfirmationState extends State<BookingConfirmation>
                   }
                   return StreamBuilder<DatabaseEvent>(
                       stream: (userRequestData['driverDetail'] == null &&
-                              pinLocationIcon != null)
-                          ? fdb.onValue.asBroadcastStream()
+                          pinLocationIcon != null)
+                          ? _driverStream
                           : null,
                       builder: (context, AsyncSnapshot<DatabaseEvent> event) {
                         if (event.hasData) {
@@ -1080,7 +1090,6 @@ class _BookingConfirmationState extends State<BookingConfirmation>
                             }
                           }
                         }
-
                         return StreamBuilder<DatabaseEvent>(
                             stream: (userRequestData['driverDetail'] != null &&
                                     pinLocationIcon != null)
@@ -1751,15 +1760,18 @@ class _BookingConfirmationState extends State<BookingConfirmation>
                                                                                                         print(bearerToken[0].token);
                                                                                                         print(bearerToken[0].token.substring(500));
                                                                                                       },
+                                                                                                      // APRÈS
                                                                                                       child: Text(
-                                                                                                        "${etaDetails[i]['total'].toStringAsFixed(0)} ${etaDetails[i]['currency']}" ,
+                                                                                                        "${etaDetails[i]['total'].toStringAsFixed(0)} ${etaDetails[i]['currency']}",
+                                                                                                        overflow: TextOverflow.ellipsis,
+                                                                                                        maxLines: 1,
                                                                                                         style: GoogleFonts.inter(
-                                                                                                            fontSize: 18,
+                                                                                                            fontSize: 14,
                                                                                                             fontWeight: FontWeight.w600,
                                                                                                             color: (choosenVehicle != i)
                                                                                                                 ? (isDarkTheme == true)
-                                                                                                                    ? Colors.white
-                                                                                                                    : textColor
+                                                                                                                ? Colors.white
+                                                                                                                : textColor
                                                                                                                 : Colors.white),
                                                                                                       ),
                                                                                                     )
@@ -1767,6 +1779,7 @@ class _BookingConfirmationState extends State<BookingConfirmation>
                                                                                                 )
                                                                                               : Row(
                                                                                                   mainAxisAlignment: MainAxisAlignment.end,
+                                                                                                  mainAxisSize: MainAxisSize.min,
                                                                                                   children: [
                                                                                                     Text(
                                                                                                       etaDetails[i]['currency'] + ' ',
@@ -3317,8 +3330,9 @@ class _BookingConfirmationState extends State<BookingConfirmation>
                                                                                 Row(
                                                                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                                               children: [
-                                                                                Button(
-                                                                                    width: ((userDetails['show_ride_later_feature'] == true)) ? media.width * 0.625 : media.width * 0.89,
+                                                                                Expanded(
+                                                                                child: Button(
+                                                                                width: null,
                                                                                     color: buttonColor,
                                                                                     onTap: () async {
                                                                                       if (choosenVehicle != null) {
@@ -3387,6 +3401,7 @@ class _BookingConfirmationState extends State<BookingConfirmation>
                                                                                       }
                                                                                     },
                                                                                     text: languages[choosenLanguage]['text_book_now']),
+                                                                                ),
                                                                                 (userDetails['show_ride_later_feature'] == true)
                                                                                     ? InkWell(
                                                                                         onTap: () async {
@@ -4758,9 +4773,22 @@ class _BookingConfirmationState extends State<BookingConfirmation>
                                                         textcolor:
                                                             Color(0xff929292),
                                                         onTap: () async {
+                                                          timers?.cancel();
+                                                          timers = null;
+                                                          timing = null;
+                                                          _driverStream = null;
+                                                          _lastDriverId = null;
+                                                          var val = await cancelRequest();
                                                           userRequestData = {};
                                                           valueNotifierBook.incrementNotifier();
-                                                          cancelRequest();
+                                                          if (mounted) {
+                                                            setState(() {
+                                                              cancelRequestByUser = true;
+                                                            });
+                                                          }
+                                                          if (val == 'logout') {
+                                                            navigateLogout();
+                                                          }
                                                         },
                                                         text: languages[
                                                                 choosenLanguage]

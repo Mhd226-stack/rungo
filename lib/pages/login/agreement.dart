@@ -105,7 +105,7 @@ class _AggreementPageState extends State<AggreementPage> {
                                         fontWeight: FontWeight.w400),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    openBrowser('http://192.168.11.107/privacy');
+                                    openBrowser('https://mhd226-stack.github.io/rungo-privacy/');
                                   }),
                             TextSpan(
                                 text: languages[choosenLanguage]
@@ -124,7 +124,7 @@ class _AggreementPageState extends State<AggreementPage> {
                                         fontWeight: FontWeight.w400),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    openBrowser('http://192.168.11.107/privacy');
+                                    openBrowser('https://mhd226-stack.github.io/rungo-privacy/');
                                   }),
                           ],
                         ),

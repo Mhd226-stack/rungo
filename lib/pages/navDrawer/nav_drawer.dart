@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_user/common/responsive.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../functions/functions.dart';
+import '../../main.dart';
 import '../../styles/styles.dart';
 import '../../translations/translation.dart';
 import '../../widgets/widgets.dart';
@@ -19,6 +20,8 @@ import '../NavigatorPages/sos.dart';
 import '../NavigatorPages/suppot_page.dart';
 import '../NavigatorPages/walletpage.dart';
 import '../onTripPage/map_page.dart';
+import '../login/login.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NavDrawer extends StatefulWidget {
   const NavDrawer({Key? key}) : super(key: key);
@@ -28,25 +31,10 @@ class NavDrawer extends StatefulWidget {
 
 class _NavDrawerState extends State<NavDrawer> {
   darkthemefun() async {
-    if (isDarkTheme) {
-      isDarkTheme = false;
-      page = Colors.white;
-      textColor = Colors.black;
-      buttonColor = theme;
-      loaderColor = theme;
-      hintColor = const Color(0xff12121D).withOpacity(0.3);
-    } else {
-      isDarkTheme = true;
-      page = const Color(0xFF3D3D3D);
-      textColor = Colors.white.withOpacity(0.9);
-      buttonColor = Colors.white;
-      loaderColor = Colors.white;
-      hintColor = Colors.white.withOpacity(0.3);
-    }
+    setTheme(!isDarkTheme);
+    themeNotifier.value = isDarkTheme;
     await getDetailsOfDevice();
-
     pref.setBool('isDarkTheme', isDarkTheme);
-
     valueNotifierHome.incrementNotifier();
   }
 
@@ -96,7 +84,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                                     (userDetails['profile_picture'] != null && userDetails['profile_picture'].toString().isNotEmpty)
                                                         ? (userDetails['profile_picture'].toString().startsWith('http')
                                                         ? userDetails['profile_picture'].toString()
-                                                        : 'http://192.168.11.107${userDetails['profile_picture']}')
+                                                        : 'https://rungobf.com${userDetails['profile_picture']}')
                                                         : 'https://ui-avatars.com/api/?name=${userDetails['name'] ?? 'U'}&background=random',
                                                   ),
                                                   fit: BoxFit.cover)),
@@ -240,8 +228,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                                                size: media
                                                                    .width *
                                                                    sixteen,
-                                                               color:
-                                                               white,
+                                                               color: textColor,
                                                              ),
                                                            ),
                                                          ],
@@ -618,13 +605,95 @@ class _NavDrawerState extends State<NavDrawer> {
                                 ]),
                           ),
                         ),
+                        // ── Assistance ──
+                        Padding(
+                          padding: EdgeInsets.only(top: media.width * 0.025),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Appel
+                              NavMenu(
+                                onTap: () => makingPhoneCall(
+                                    userDetails['contact_us_mobile1']),
+                                text: 'Appel assistance',
+                                icon: Icons.call,
+                                isSos: true,
+                              ),
+                              // WhatsApp
+                              NavMenu(
+                                onTap: () async {
+                                  String url =
+                                      "https://wa.me/${userDetails['contact_us_mobile1']}/?text=''";
+                                  if (await canLaunch(url)) {
+                                    await launch(url);
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                            content: Text("WhatsApp non installé")));
+                                  }
+                                },
+                                text: 'WhatsApp assistance',
+                                icon: Icons.message_rounded,
+                                isSos: true,
+                              ),
+                              // Urgence
+                              NavMenu(
+                                onTap: () => makingPhoneCall('129'),
+                                text: 'Urgence',
+                                icon: Icons.emergency_rounded,
+                                isSos: true,
+                              ),
+                            ],
+                          ),
+                        ),
                         InkWell(
-                          onTap: () {
-                            setState(() {
-                              logout = true;
-                            });
-                            valueNotifierHome.incrementNotifier();
-                            Navigator.pop(context);
+                          onTap: () async {
+                            Navigator.pop(context); // fermer le drawer
+
+                            // afficher dialog de confirmation
+                            showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                backgroundColor: page,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                title: Text(
+                                  languages[choosenLanguage]['text_confirmlogout'],
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: textColor, fontWeight: FontWeight.w600),
+                                ),
+                                actions: [
+                                  // Annuler
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(ctx),
+                                    child: Text(
+                                      languages[choosenLanguage]['text_cancel'],
+                                      style: TextStyle(color: textColor),
+                                    ),
+                                  ),
+                                  // Confirmer
+                                  TextButton(
+                                    onPressed: () async {
+                                      Navigator.pop(ctx);
+                                      var result = await userLogout();
+                                      if (result == 'success' || result == 'logout') {
+                                        userDetails.clear();
+                                        Navigator.pushAndRemoveUntil(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => const Login()),
+                                              (route) => false,
+                                        );
+                                      }
+                                    },
+                                    child: Text(
+                                      languages[choosenLanguage]['text_confirm'],
+                                      style: TextStyle(color: buttonColor, fontWeight: FontWeight.w700),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
                           },
                           child: Container(
                               alignment: Alignment.center,

@@ -1,6 +1,4 @@
 class AppConfig {
-  // Change seulement cette ligne quand l'IP change
-  static const String serverIp = '192.168.11.107';
-
-  static const String baseUrl = 'http://$serverIp/api/v1';
+  static const String serverIp = 'rungobf.com';
+  static const String baseUrl = 'https://rungobf.com/api/v1';
 }

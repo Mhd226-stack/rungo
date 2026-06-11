@@ -108,7 +108,7 @@ class _SupportPageState extends State<SupportPage> {
                               button: false,
                               onTap: () {
                                     openBrowser(
-                                        'http://192.168.11.107/privacy');
+                                        'https://mhd226-stack.github.io/rungo-privacy/');
                               }),
                           ButtonBottomSpace(
                             height: 4,

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../../functions/functions.dart';
 import '../onTripPage/map_page.dart';
 import '../navDrawer/nav_drawer.dart';
+import 'dart:async';
+import '../../widgets/animated_text.dart';
 
 class RungoHomePage extends StatefulWidget {
   const RungoHomePage({super.key});
@@ -16,6 +19,11 @@ class _RungoHomePageState extends State<RungoHomePage>
   late Animation<double> _fadeAnim;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
+  void _loadBanners() async {
+    await getUserDetails();
+    if (mounted) setState(() {});
+  }
+
   @override
   void initState() {
     super.initState();
@@ -23,6 +31,7 @@ class _RungoHomePageState extends State<RungoHomePage>
       statusBarColor: Colors.transparent,
       statusBarIconBrightness: Brightness.light,
     ));
+    _loadBanners();
     _fadeCtrl = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 600))
       ..forward();
@@ -39,29 +48,37 @@ class _RungoHomePageState extends State<RungoHomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      backgroundColor: const Color(0xFF0D0D0D),
+      backgroundColor: Colors.transparent,
       drawer: NavDrawer(),
-      body: FadeTransition(
-        opacity: _fadeAnim,
-        child: SafeArea(
-          child: Column(
-            children: [
-              _TopBar(scaffoldKey: _scaffoldKey),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 16),
-                      _PromoBanner(),
-                      const SizedBox(height: 20),
-                      _ServicesGrid(),
-                      const SizedBox(height: 20),
-                    ],
+      body: Container(
+        decoration: const BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage('assets/images/bacck.png'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: FadeTransition(
+          opacity: _fadeAnim,
+          child: SafeArea(
+            child: Column(
+              children: [
+                _TopBar(scaffoldKey: _scaffoldKey),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 16),
+                        banners.isNotEmpty ? const _DynamicBanner() : _PromoBanner(),
+                        const SizedBox(height: 20),
+                        _ServicesGrid(),
+                        const SizedBox(height: 20),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -88,14 +105,13 @@ class _TopBar extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Row(
         children: [
-          // bouton menu burger rouge (comme screenshot)
           GestureDetector(
-            onTap: () => Scaffold.of(context).openDrawer(),
+            onTap: () => scaffoldKey.currentState?.openDrawer(),
             child: Container(
               width: 46,
               height: 46,
               decoration: const BoxDecoration(
-                color: Color(0xFF8B1A1A),
+                color: Color(0xFF001A0D),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.menu_rounded, color: Colors.white, size: 22),
@@ -128,10 +144,10 @@ class _TopBar extends StatelessWidget {
             height: 46,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: const Color(0xFF1C1C1C),
-              border: Border.all(color: const Color(0xFF8B1A1A), width: 2),
+              color: const Color(0xFFC244),
+              border: Border.all(color: const Color(0xFF9E9E9E), width: 2),
             ),
-            child: const Icon(Icons.person_rounded,
+            child: const Icon(Icons.light_mode_outlined,
                 color: Color(0xFF9E9E9E), size: 22),
           ),
         ],
@@ -140,9 +156,6 @@ class _TopBar extends StatelessWidget {
   }
 }
 
-// ══════════════════════════════════════════════
-//  BANNIÈRE PROMO  (fond jaune/or comme screenshot)
-// ══════════════════════════════════════════════
 class _PromoBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -290,13 +303,13 @@ class _ServiceData {
   const _ServiceData({
     required this.label,
     required this.sublabel,
-    required this.icon,
+    required this.imagePath,
     required this.iconColor,
     required this.bgColor,
   });
   final String label;
   final String sublabel;
-  final IconData icon;
+  final String imagePath;
   final Color iconColor;
   final Color bgColor;
 }
@@ -305,28 +318,28 @@ const List<_ServiceData> _serviceItems = [
   _ServiceData(
     label: 'Livraison',
     sublabel: 'Colis & courses',
-    icon: Icons.inventory_2_rounded,
+    imagePath: 'assets/images/box.png',
     iconColor: Color(0xFF4FC3F7),
     bgColor: Color(0xFF0D1F2D),
   ),
   _ServiceData(
     label: 'Voiture',
     sublabel: 'dès 4 min',
-    icon: Icons.directions_car_rounded,
+    imagePath: 'assets/images/carh.png',
     iconColor: Colors.white,
     bgColor: Color(0xFF12122A),
   ),
   _ServiceData(
     label: 'Moto-Rapide',
     sublabel: 'dès 2 min',
-    icon: Icons.motorcycle_rounded,
+    imagePath: 'assets/images/moto.png',
     iconColor: Color(0xFFFFCC00),
     bgColor: Color(0xFF1E1A00),
   ),
   _ServiceData(
     label: 'Tricycle',
     sublabel: 'Économique',
-    icon: Icons.electric_rickshaw_rounded,
+    imagePath: 'assets/images/tricycle.png',
     iconColor: Color(0xFF2ECC71),
     bgColor: Color(0xFF001A0D),
   ),
@@ -368,12 +381,13 @@ class _ServiceCardState extends State<_ServiceCard> {
       onTapDown: (_) => setState(() => _pressed = true),
       onTapUp: (_) => setState(() => _pressed = false),
       onTapCancel: () => setState(() => _pressed = false),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const Maps()),
-        );
-      },
+        onTap: () {
+          openDestinationOnLoad = true;
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => const Maps()),
+          );
+        },
       child: AnimatedScale(
         scale: _pressed ? 0.95 : 1.0,
         duration: const Duration(milliseconds: 120),
@@ -406,7 +420,6 @@ class _ServiceCardState extends State<_ServiceCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    // icône dans un carré arrondi
                     Container(
                       width: 52,
                       height: 52,
@@ -414,8 +427,13 @@ class _ServiceCardState extends State<_ServiceCard> {
                         color: item.iconColor.withOpacity(0.12),
                         borderRadius: BorderRadius.circular(14),
                       ),
-                      child:
-                      Icon(item.icon, color: item.iconColor, size: 28),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Image.asset(
+                          item.imagePath,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
                     ),
 
                     // label + sublabel
@@ -461,18 +479,14 @@ class _ServiceCardState extends State<_ServiceCard> {
 class _WhereToBar extends StatelessWidget {
   final VoidCallback onTap;
   const _WhereToBar({required this.onTap});
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: const Color(0xFF0D0D0D),
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 28),
       child: GestureDetector(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (_) => const Maps()),
-          );
-        },
+        onTap: onTap,
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 17),
           decoration: BoxDecoration(
@@ -494,29 +508,27 @@ class _WhereToBar extends StatelessWidget {
                 width: 38,
                 height: 38,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF8B1A1A).withOpacity(0.15),
+                  color: const Color(0xFFFFC244A).withOpacity(0.15),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: const Icon(Icons.directions_car_rounded,
-                    color: Color(0xFF8B1A1A), size: 20),
+                child: const Icon(Icons.near_me,
+                    color: const Color(0xFFFFC244), size: 20),
               ),
               const SizedBox(width: 14),
 
-              const Expanded(
-                child: Text('Où allez-vous ?',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600)),
+              Expanded(
+                child: AnimatedWhereToText(
+                  media: MediaQuery.of(context).size,
+                  baseText: 'Où allez-vous ?',
+                ),
               ),
-
 
               // flèche rouge
               Container(
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF8B1A1A),
+                  color: const Color(0xFFFFC244),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(Icons.arrow_forward_rounded,
@@ -530,3 +542,95 @@ class _WhereToBar extends StatelessWidget {
   }
 }
 
+class _DynamicBanner extends StatefulWidget {
+  const _DynamicBanner();
+
+  @override
+  State<_DynamicBanner> createState() => _DynamicBannerState();
+}
+
+class _DynamicBannerState extends State<_DynamicBanner> {
+  final PageController _pageController = PageController();
+  int _currentPage = 0;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    if (banners.length > 1) {
+      _timer = Timer.periodic(const Duration(seconds: 6), (_) {
+        final next = (_currentPage + 1) % banners.length;
+        _pageController.animateToPage(
+          next,
+          duration: const Duration(milliseconds: 800),
+          curve: Curves.easeInOut,
+        );
+        setState(() => _currentPage = next);
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 190,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      clipBehavior: Clip.hardEdge,
+      child: Stack(
+        children: [
+          // images du panel admin
+          PageView.builder(
+            controller: _pageController,
+            itemCount: banners.length,
+            onPageChanged: (i) => setState(() => _currentPage = i),
+            itemBuilder: (_, i) => Image.network(
+              banners[i]['image'],
+              fit: BoxFit.cover,
+              width: double.infinity,
+              errorBuilder: (_, __, ___) => Container(
+                color: const Color(0xFF8B1A1A),
+                child: const Icon(Icons.image_not_supported,
+                    color: Colors.white54, size: 40),
+              ),
+            ),
+          ),
+
+          // indicateurs de page (points)
+          if (banners.length > 1)
+            Positioned(
+              bottom: 10,
+              left: 0,
+              right: 0,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  banners.length,
+                      (i) => AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    margin: const EdgeInsets.symmetric(horizontal: 3),
+                    width: _currentPage == i ? 16 : 7,
+                    height: 7,
+                    decoration: BoxDecoration(
+                      color: _currentPage == i
+                          ? Colors.white
+                          : Colors.white38,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}

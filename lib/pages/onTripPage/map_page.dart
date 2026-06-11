@@ -22,6 +22,7 @@ import '../navDrawer/nav_drawer.dart';
 import 'package:geolocator/geolocator.dart' as geolocs;
 import 'package:permission_handler/permission_handler.dart' as perm;
 import 'package:vector_math/vector_math.dart' as vector;
+import 'package:app_links/app_links.dart';
 
 import '../noInternet/noInternet.dart';
 import 'booking_confirmation.dart';
@@ -76,6 +77,7 @@ class _MapsState extends State<Maps>
   bool _locationDenied = false;
   int gettingPerm = 0;
   Animation<double>? _animation;
+  final _appLinks = AppLinks();
 
   late geolocs.LocationPermission permission;
   Location location = Location();
@@ -87,7 +89,6 @@ class _MapsState extends State<Maps>
   dynamic bikeIcon;
   dynamic userLocationIcon;
   bool favAddressAdd = false;
-  bool contactus = false;
   bool _isDarkTheme = false;
 
   Stream<DatabaseEvent>? _driversStream;
@@ -119,6 +120,24 @@ class _MapsState extends State<Maps>
         .endAt(higher)
         .onValue;
   }
+  void _updateUserLocationMarker(LatLng position) {
+    if (!mounted) return;
+    final marker = Marker(
+      markerId: const MarkerId('user_location'),
+      position: position,
+      icon: userLocationIcon ?? BitmapDescriptor.defaultMarkerWithHue(
+        BitmapDescriptor.hueAzure,
+      ),
+      anchor: const Offset(0.5, 0.5),
+      zIndex: 2,
+    );
+    setState(() {
+      myMarkers.removeWhere(
+            (m) => m.markerId == const MarkerId('user_location'),
+      );
+      myMarkers.add(marker);
+    });
+  }
 
   @override
   void initState() {
@@ -128,7 +147,74 @@ class _MapsState extends State<Maps>
     getadminCurrentMessages();
     pickupAddressController = TextEditingController();
     dropLocFocusNode = FocusNode();
+    _handleIncomingLink();
+    if (openDestinationOnLoad == true) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          _bottom = 1;
+          _pickaddress = false;
+          _dropaddress = true;
+          openDestinationOnLoad = false;
+        });
+      });
+    }
+
     super.initState();
+  }
+  void _handleIncomingLink() async {
+    try {
+      final uri = await _appLinks.getInitialLink();
+      if (uri != null) {
+        _extractAndGoToLocation(uri.toString());
+      }
+      _appLinks.uriLinkStream.listen((Uri uri) {
+        _extractAndGoToLocation(uri.toString());
+      });
+    } catch (e) {
+      debugPrint('Erreur lien entrant: $e');
+    }
+  }
+  void _extractAndGoToLocation(String url) {
+    final qMatch = RegExp(r'[?&]q=([-\d.]+),([-\d.]+)').firstMatch(url);
+    final atMatch = RegExp(r'@([-\d.]+),([-\d.]+)').firstMatch(url);
+
+    double? lat, lng;
+
+    if (qMatch != null) {
+      lat = double.tryParse(qMatch.group(1)!);
+      lng = double.tryParse(qMatch.group(2)!);
+    } else if (atMatch != null) {
+      lat = double.tryParse(atMatch.group(1)!);
+      lng = double.tryParse(atMatch.group(2)!);
+    }
+
+    if (lat != null && lng != null) {
+      final destination = LatLng(lat, lng);
+      setState(() {
+        if (addressList.where((e) => e.type == 'drop').isEmpty) {
+          addressList.add(AddressList(
+            id: '2',
+            type: 'drop',
+            address: 'Position partagée',
+            pickup: false,
+            latlng: destination,
+          ));
+        } else {
+          addressList.firstWhere((e) => e.type == 'drop').latlng = destination;
+          addressList.firstWhere((e) => e.type == 'drop').address = 'Position partagée';
+        }
+      });
+      _controller?.animateCamera(
+        CameraUpdate.newLatLngZoom(destination, 15.0),
+      );
+      if (addressList.where((e) => e.type == 'pickup').isNotEmpty) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => BookingConfirmation()),
+              (route) => false,
+        );
+      }
+    }
   }
 
   @override
@@ -144,6 +230,9 @@ class _MapsState extends State<Maps>
         if (positionStream == null || positionStream!.isPaused) {
           positionStreamData();
         }
+      }
+      if (currentLocation != null && userLocationIcon != null) {
+        _updateUserLocationMarker(currentLocation);
       }
     }
   }
@@ -190,12 +279,13 @@ class _MapsState extends State<Maps>
     serviceEnabled = await location.serviceEnabled();
     polyline.clear();
     final Uint8List markerIcon =
-    await getBytesFromAsset('assets/images/top-taxi.png', 60);
-    // CORRECTION: BitmapDescriptor.fromBytes → BitmapDescriptor.bytes
+    await getBytesFromAsset('assets/images/top-taxi.png', 32);
     pinLocationIcon = BitmapDescriptor.bytes(markerIcon);
     final Uint8List bikeIcons =
-    await getBytesFromAsset('assets/images/bike.png', 40);
-    // CORRECTION: BitmapDescriptor.fromBytes → BitmapDescriptor.bytes
+    await getBytesFromAsset('assets/images/bike.png', 35);
+    final Uint8List userIcon =
+    await getBytesFromAsset('assets/images/pickupmarker.png', 30);
+    userLocationIcon = BitmapDescriptor.bytes(userIcon);
     bikeIcon = BitmapDescriptor.bytes(bikeIcons);
 
     permission = await geolocs.GeolocatorPlatform.instance.checkPermission();
@@ -225,6 +315,9 @@ class _MapsState extends State<Maps>
               double.parse(locs.longitude.toString()));
           _lastCenter = _centerLocation;
         });
+        if (userLocationIcon != null) {
+          _updateUserLocationMarker(currentLocation);
+        }
       } else {
         var loc = await geolocs.Geolocator.getCurrentPosition(
             desiredAccuracy: geolocs.LocationAccuracy.low);
@@ -237,6 +330,10 @@ class _MapsState extends State<Maps>
               double.parse(loc.longitude.toString()));
           _lastCenter = _centerLocation;
         });
+        // ✅ ICI aussi pour le cas getCurrentPosition
+        if (userLocationIcon != null) {
+          _updateUserLocationMarker(currentLocation);
+        }
       }
       _controller?.animateCamera(CameraUpdate.newLatLngZoom(center, 18.0));
 
@@ -781,7 +878,7 @@ class _MapsState extends State<Maps>
                                                     zoomControlsEnabled:
                                                     false,
                                                     myLocationEnabled:
-                                                    true,
+                                                    false,
                                                   );
                                                 });
                                           })),
@@ -902,201 +999,34 @@ class _MapsState extends State<Maps>
                                                 : Image.asset(
                                                 'assets/images/dropmarker.png'))),
                                   ),
-                                  Positioned(
-                                    top: MediaQuery.of(context)
-                                        .padding
-                                        .top +
-                                        20,
-                                    right: Responsive.width(
-                                        5, context),
-                                    child: InkWell(
-                                      onTap: () async {
-                                        if (contactus == false) {
-                                          setState(() {
-                                            contactus = true;
-                                          });
-                                        } else {
-                                          setState(() {
-                                            contactus = false;
-                                          });
-                                        }
-                                      },
-                                      child: Container(
-                                          height:
-                                          media.width * 0.12,
-                                          width:
-                                          media.width * 0.12,
-                                          decoration:
-                                          BoxDecoration(
-                                            color:
-                                            contactus == true
-                                                ? white
-                                                : buttonColor,
-                                            shape:
-                                            BoxShape.circle,
-                                          ),
-                                          alignment:
-                                          Alignment.center,
-                                          child: Icon(
-                                            contactus == true
-                                                ? Icons.close
-                                                : Icons
-                                                .support_agent_rounded,
-                                            color:
-                                            contactus == true
-                                                ? buttonColor
-                                                : white,
-                                            size: media.width *
-                                                0.08,
-                                          )),
-                                    ),
-                                  ),
-                                  (contactus == true)
-                                      ? Positioned(
-                                    right: Responsive.width(
-                                        5, context),
-                                    top: Responsive.height(
-                                        13, context),
-                                    child: InkWell(
-                                      onTap: () {
-                                        print('object');
-                                      },
-                                      child: Container(
-                                          margin: EdgeInsets
-                                              .only(
-                                              top: 10),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                            MainAxisAlignment
-                                                .start,
-                                            children: [
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  makingPhoneCall(
-                                                      userDetails[
-                                                      'contact_us_mobile1']);
-                                                },
-                                                child:
-                                                Container(
-                                                  height: media
-                                                      .width *
-                                                      0.12,
-                                                  width: media
-                                                      .width *
-                                                      0.12,
-                                                  decoration:
-                                                  BoxDecoration(
-                                                    shape: BoxShape
-                                                        .circle,
-                                                    color:
-                                                    buttonColor,
-                                                  ),
-                                                  alignment:
-                                                  Alignment
-                                                      .center,
-                                                  child:
-                                                  Icon(Icons.call,
-                                                    size: media.width *
-                                                        0.065,
-                                                    color:
-                                                    textColor,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              InkWell(
-                                                onTap:
-                                                    () async {
-                                                  var whatsappUrl =
-                                                      "whatsapp://send?phone=${userDetails['contact_us_mobile1']}";
-                                                  String
-                                                  url =
-                                                      "https://wa.me/${userDetails['contact_us_mobile1']}/?text=''}";
-                                                  if (await canLaunch(
-                                                      url)) {
-                                                    await launch(
-                                                        url);
-                                                  } else {
-                                                    ScaffoldMessenger.of(context)
-                                                        .showSnackBar(SnackBar(
-                                                      content:
-                                                      Text("WhatsApp not installed"),
-                                                    ));
-                                                  }
-                                                  // canLaunch(
-                                                  //   //       whatsappUrl)
-                                                  //   //   .then(
-                                                  //   //       (canLaunchWhatsApp) {
-                                                  //   // if (canLaunchWhatsApp) {
-                                                  //   //   launch(
-                                                  //   //       whatsappUrl);
-                                                  //   // } else {
-                                                  //   //   ScaffoldMessenger.of(context)
-                                                  //   //       .showSnackBar(SnackBar(
-                                                  //   //     content:
-                                                  //   //         Text("WhatsApp not installed"),
-                                                  //   //   ));
-                                                  //   // }
-                                                  //});
-                                                  // launchUrl(
-                                                  //     Uri.parse(whatsappUrl));
-                                                },
-                                                child:
-                                                Container(
-                                                  height: media
-                                                      .width *
-                                                      0.12,
-                                                  width: media
-                                                      .width *
-                                                      0.12,
-                                                  decoration:
-                                                  BoxDecoration(
-                                                    shape: BoxShape
-                                                        .circle,
-                                                    color:
-                                                    buttonColor,
-                                                  ),
-                                                  alignment:
-                                                  Alignment
-                                                      .center,
-                                                  child: Icon(
-                                                      Icons.message_rounded,
-                                                      size: media.width *
-                                                          0.08,
-                                                      color:
-                                                      textColor),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  makingPhoneCall(
-                                                      '129');
-                                                },
-                                                child: Container(
-                                                    height: media.width * 0.12,
-                                                    width: media.width * 0.12,
-                                                    decoration: BoxDecoration(
-                                                      shape:
-                                                      BoxShape.circle,
-                                                      color:
-                                                      buttonColor,
-                                                    ),
-                                                    alignment: Alignment.center,
-                                                    child: Image(height: media.width * 0.08, width: media.width * 0.08, image: AssetImage('assets/images/emergency_icon.png'))),
-                                              )
-                                            ],
-                                          )),
-                                    ),
-                                  )
-                                      : Container(),
+                          Positioned(
+                            top: MediaQuery.of(context).padding.top + 20,
+                            right: Responsive.width(5, context),
+                            child: InkWell(
+                              onTap: () {
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(builder: (_) => const RungoHomePage()),
+                                      (route) => false,
+                                );
+                              },
+                              child: Container(
+                                height: media.width * 0.12,
+                                width: media.width * 0.12,
+                                decoration: BoxDecoration(
+                                  color: buttonColor,
+                                  shape: BoxShape.circle,
+                                ),
+                                alignment: Alignment.center,
+                                child: Icon(
+                                  Icons.home_rounded,
+                                  color: white,
+                                  size: media.width * 0.08,
+                                ),
+                              ),
+                            ),
+                          ),
+
                                   (_bottom == 0)
                                       ? Positioned(
                                       top: MediaQuery.of(
@@ -1147,17 +1077,7 @@ class _MapsState extends State<Maps>
                                                   .width *
                                                   0.02,
                                             ),
-                                            (banners.isNotEmpty)
-                                                ? SizedBox(
-                                                width: media
-                                                    .width *
-                                                    0.77,
-                                                height: media
-                                                    .width *
-                                                    0.15,
-                                                child:
-                                                const BannerImage())
-                                                : Container(),
+                                            Container(),
                                           ],
                                         ),
                                       ))
@@ -1367,7 +1287,7 @@ class _MapsState extends State<Maps>
                                                     ),
                                                     SizedBox(
                                                       height:
-                                                      media.width * 0.1,
+                                                      media.width * 0.04,
                                                     ),
                                                   ],
                                                 )
@@ -1376,7 +1296,7 @@ class _MapsState extends State<Maps>
                                                     ? Container(
                                                   height: media
                                                       .width *
-                                                      0.25,
+                                                      0.33,
                                                   width: media
                                                       .width *
                                                       0.9,
@@ -1410,6 +1330,7 @@ class _MapsState extends State<Maps>
                                                           decoration: BoxDecoration(
                                                             borderRadius: BorderRadius.circular(media.width * 0.03),
                                                             color: darkModeSecContainer,
+                                                            border: Border.all(color: borderLines, width: 1.2),
                                                           ),
                                                           child: SizedBox(
                                                             height:
@@ -1515,11 +1436,17 @@ class _MapsState extends State<Maps>
                                                         height:
                                                         media.width * 0.02,
                                                       ),
-                                                      SizedBox(
-                                                        height:
-                                                        media.width * 0.07,
-                                                        child:
-                                                        Column(
+                                                  Container(
+                                                    width: media.width * 0.86,
+                                                    padding: EdgeInsets.symmetric(horizontal: media.width * 0.03, vertical: media.width * 0.01),
+                                                    decoration: BoxDecoration(
+                                                      borderRadius: BorderRadius.circular(media.width * 0.03),
+                                                      color: darkModeSecContainer,
+                                                      border: Border.all(color: borderLines, width: 1.2),
+                                                    ),
+                                                    child: SizedBox(
+                                                      height: media.width * 0.07,
+                                                      child: Column(
                                                           children: [
                                                             Expanded(
                                                               child: Row(
@@ -1602,7 +1529,7 @@ class _MapsState extends State<Maps>
                                                             )
                                                           ],
                                                         ),
-                                                      ),
+                                                      )),
                                                     ],
                                                   ),
                                                 )
@@ -2853,13 +2780,16 @@ class _MapsState extends State<Maps>
                                       Button(
                                           onTap: () {
                                             setState(() {
-                                              requestCancelledByDriver =
-                                              false;
+                                              requestCancelledByDriver = false;
                                               userRequestData = {};
                                             });
+                                            Navigator.pushAndRemoveUntil(
+                                              context,
+                                              MaterialPageRoute(builder: (_) => const RungoHomePage()),
+                                                  (route) => false,
+                                            );
                                           },
-                                          text: languages[choosenLanguage]
-                                          ['text_ok'])
+                                          text: languages[choosenLanguage]['text_ok'])
                                     ],
                                   ),
                                 )
