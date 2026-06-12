@@ -69,7 +69,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                     width: media.width * 0.7,
                                     child: Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                      MainAxisAlignment.start,
                                       children: [
                                         SizedBox(
                                           width: Responsive.width(2, context),
@@ -95,7 +95,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                         SizedBox(
                                           child: Row(
                                             mainAxisAlignment:
-                                                MainAxisAlignment.spaceEvenly,
+                                            MainAxisAlignment.spaceEvenly,
                                             children: [
                                               Container(
                                                 width: Responsive.width(
@@ -113,7 +113,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                                       context,
                                                       MaterialPageRoute(
                                                           builder: (context) =>
-                                                              const EditProfile()));
+                                                          const EditProfile()));
                                                   if (val) {
                                                     setState(() {});
                                                   }
@@ -158,20 +158,20 @@ class _NavDrawerState extends State<NavDrawer> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const History()));
+                                                    const History()));
                                           },
                                           isSos: true,
                                           text: languages[choosenLanguage]
-                                              ['text_my_orders'],
-                                         image: 'assets/nav/trips.png',
+                                          ['text_my_orders'],
+                                          image: 'assets/nav/trips.png',
                                         ),
 
                                         Container(
                                           padding: EdgeInsets.only(top: media.width * 0.025),
                                           child: ValueListenableBuilder(
                                               valueListenable:
-                                                  valueNotifierNotification
-                                                      .value,
+                                              valueNotifierNotification
+                                                  .value,
                                               builder: (context, value, child) {
                                                 return InkWell(
                                                   onTap: () {
@@ -179,10 +179,10 @@ class _NavDrawerState extends State<NavDrawer> {
                                                         context,
                                                         MaterialPageRoute(
                                                             builder: (context) =>
-                                                                const NotificationPage()));
+                                                            const NotificationPage()));
                                                     setState(() {
                                                       userDetails[
-                                                          'notifications_count'] = 0;
+                                                      'notifications_count'] = 0;
                                                     });
                                                   },
                                                   child: Padding(
@@ -194,74 +194,74 @@ class _NavDrawerState extends State<NavDrawer> {
                                                     ),
                                                     child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                       children: [
-                                                       Row(
-                                                         children: [
-                                                           Image.asset(
-                                                             'assets/nav/notifications.png',
-                                                             width: media
-                                                                 .width *
-                                                                 twentythree,
-                                                             height: media
-                                                                 .width *
-                                                                 twentythree,
-                                                             color: textColor,
-                                                           ),
-                                                           SizedBox(
-                                                               width: 10
-                                                           ),
-                                                           SizedBox(
-                                                             width: (userDetails[
-                                                             'notifications_count'] ==
-                                                                 0)
-                                                                 ? media.width *
-                                                                 0.49
-                                                                 : media.width *
-                                                                 0.435,
-                                                             child: MyText(
-                                                               text: languages[choosenLanguage]
-                                                               [
-                                                               'text_notification']
-                                                                   .toString(),
-                                                               overflow:
-                                                               TextOverflow
-                                                                   .ellipsis,
-                                                               size: media
-                                                                   .width *
-                                                                   sixteen,
-                                                               color: textColor,
-                                                             ),
-                                                           ),
-                                                         ],
-                                                       ),
+                                                        Row(
+                                                          children: [
+                                                            Image.asset(
+                                                              'assets/nav/notifications.png',
+                                                              width: media
+                                                                  .width *
+                                                                  twentythree,
+                                                              height: media
+                                                                  .width *
+                                                                  twentythree,
+                                                              color: textColor,
+                                                            ),
+                                                            SizedBox(
+                                                                width: 10
+                                                            ),
+                                                            SizedBox(
+                                                              width: (userDetails[
+                                                              'notifications_count'] ==
+                                                                  0)
+                                                                  ? media.width *
+                                                                  0.49
+                                                                  : media.width *
+                                                                  0.435,
+                                                              child: MyText(
+                                                                text: languages[choosenLanguage]
+                                                                [
+                                                                'text_notification']
+                                                                    .toString(),
+                                                                overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                                size: media
+                                                                    .width *
+                                                                    sixteen,
+                                                                color: textColor,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
                                                         Row(
                                                           mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
                                                           children: [
 
                                                             Row(
                                                               children: [
                                                                 (userDetails['notifications_count'] ==
-                                                                        0)
+                                                                    0)
                                                                     ? Container()
                                                                     : Container(
-                                                                        height:
-                                                                            20,
-                                                                        width:
-                                                                            20,
-                                                                        alignment:
-                                                                            Alignment.center,
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          shape: BoxShape.circle,
-                                                                          color: buttonColor,
-                                                                        ),
-                                                                        child:
-                                                                            Text(
-                                                                          userDetails['notifications_count'].toString(),
-                                                                          style: GoogleFonts.inter(fontSize: media.width * fourteen, color: (isDarkTheme) ? Colors.black : buttonText),
-                                                                        ),
-                                                                      ),
+                                                                  height:
+                                                                  20,
+                                                                  width:
+                                                                  20,
+                                                                  alignment:
+                                                                  Alignment.center,
+                                                                  decoration:
+                                                                  BoxDecoration(
+                                                                    shape: BoxShape.circle,
+                                                                    color: buttonColor,
+                                                                  ),
+                                                                  child:
+                                                                  Text(
+                                                                    userDetails['notifications_count'].toString(),
+                                                                    style: GoogleFonts.inter(fontSize: media.width * fourteen, color: (isDarkTheme) ? Colors.black : buttonText),
+                                                                  ),
+                                                                ),
                                                                 // Icon(
                                                                 //   Icons
                                                                 //       .play_arrow_rounded,
@@ -369,7 +369,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                         ),
                                         //wallet page
                                         if (userDetails[
-                                                'show_wallet_feature_on_mobile_app'] ==
+                                        'show_wallet_feature_on_mobile_app'] ==
                                             "1")
                                           NavMenu(
                                             onTap: () {
@@ -379,10 +379,10 @@ class _NavDrawerState extends State<NavDrawer> {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          const WalletPage()));
+                                                      const WalletPage()));
                                             },
                                             text: languages[choosenLanguage]
-                                                ['text_enable_wallet'],
+                                            ['text_enable_wallet'],
                                             icon: Icons.wallet,
                                           ),
 
@@ -408,13 +408,13 @@ class _NavDrawerState extends State<NavDrawer> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const Sos()));
+                                                    const Sos()));
                                             if (nav) {
                                               setState(() {});
                                             }
                                           },
                                           text: languages[choosenLanguage]
-                                              ['text_sos'],
+                                          ['text_sos'],
                                           image: 'assets/nav/sos.png',
                                         ),
 
@@ -445,15 +445,15 @@ class _NavDrawerState extends State<NavDrawer> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const SettingsPage()));
+                                                    const SettingsPage()));
                                             // if (nav) {
                                             //   setState(() {});
                                             // }
                                           },
                                           text: languages[choosenLanguage]
-                                              ['text_settings'],
+                                          ['text_settings'],
                                           image:
-                                              'assets/nav/settings.png',
+                                          'assets/nav/settings.png',
 
                                         ),
                                         NavMenu(
@@ -510,7 +510,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                         // NavMenu(
                                         //   onTap: () {
                                         //     openBrowser(
-                                        //         'https://clust.al/en/privacy/');
+                                        //         'https://rungobf/privacy/');
                                         //   },
                                         //   text: languages[choosenLanguage]
                                         //       ['text_privacy'],
@@ -560,7 +560,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                             top: media.width * 0.025),
                                         child: Row(
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: [
                                             Icon(
                                               isDarkTheme
@@ -574,21 +574,21 @@ class _NavDrawerState extends State<NavDrawer> {
                                             ),
                                             Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                              MainAxisAlignment
+                                                  .spaceBetween,
                                               children: [
                                                 SizedBox(
                                                     width: media.width * 0.46,
                                                     child: Text(
                                                       languages[choosenLanguage]
-                                                          ['text_select_theme'],
+                                                      ['text_select_theme'],
                                                       style: GoogleFonts.inter(
                                                           fontSize:
-                                                              media.width *
-                                                                  sixteen,
+                                                          media.width *
+                                                              sixteen,
                                                           color: textColor
                                                               .withOpacity(
-                                                                  0.8)),
+                                                              0.8)),
                                                     )),
                                                 Switch(
                                                     value: isDarkTheme,
@@ -638,7 +638,7 @@ class _NavDrawerState extends State<NavDrawer> {
                               ),
                               // Urgence
                               NavMenu(
-                                onTap: () => makingPhoneCall('129'),
+                                onTap: () => makingPhoneCall('000'),
                                 text: 'Urgence',
                                 icon: Icons.emergency_rounded,
                                 isSos: true,
@@ -647,10 +647,8 @@ class _NavDrawerState extends State<NavDrawer> {
                           ),
                         ),
                         InkWell(
-                          onTap: () async {
-                            Navigator.pop(context); // fermer le drawer
-
-                            // afficher dialog de confirmation
+                          onTap: () {
+                            final navigator = Navigator.of(context);
                             showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
@@ -671,17 +669,16 @@ class _NavDrawerState extends State<NavDrawer> {
                                       style: TextStyle(color: textColor),
                                     ),
                                   ),
-                                  // Confirmer
                                   TextButton(
                                     onPressed: () async {
-                                      Navigator.pop(ctx);
+                                      Navigator.pop(ctx); // ferme le dialog
                                       var result = await userLogout();
                                       if (result == 'success' || result == 'logout') {
                                         userDetails.clear();
-                                        Navigator.pushAndRemoveUntil(
-                                          context,
+                                        navigator.pushAndRemoveUntil(
                                           MaterialPageRoute(
-                                              builder: (context) => const Login()),
+                                            builder: (context) => const Login(),
+                                          ),
                                               (route) => false,
                                         );
                                       }
@@ -704,7 +701,7 @@ class _NavDrawerState extends State<NavDrawer> {
                                   borderRadius: BorderRadius.circular(15)),
                               child: MyText(
                                 text: languages[choosenLanguage]
-                                    ['text_sign_out'],
+                                ['text_sign_out'],
                                 size: media.width * sixteen,
                                 fontweight: FontWeight.w500,
                                 textAlign: TextAlign.center,

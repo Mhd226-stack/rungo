@@ -195,16 +195,16 @@ class _LoadingPageState extends State<LoadingPage>
                       letterSpacing: 6,
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Votre trajet, en un clic',
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
-                    ),
-                  ),
+                  //const SizedBox(height: 8),
+                  // Text(
+                    //'Votre trajet, en un clic',
+                    //style: TextStyle(
+                      // color: Colors.green,
+                      //fontSize: 14,
+                      //fontWeight: FontWeight.bold,
+                      //letterSpacing: 2,
+                      //),
+                    //),
                   const SizedBox(height: 60),
                   SizedBox(
                     width: 30,

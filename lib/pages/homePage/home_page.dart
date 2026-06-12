@@ -382,7 +382,7 @@ class _ServiceCardState extends State<_ServiceCard> {
       onTapUp: (_) => setState(() => _pressed = false),
       onTapCancel: () => setState(() => _pressed = false),
         onTap: () {
-          openDestinationOnLoad = true;
+          openDestinationOnLoad = false;
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const Maps()),

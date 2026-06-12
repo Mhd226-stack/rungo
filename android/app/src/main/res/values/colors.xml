@@ -4,4 +4,5 @@
         #FFB800</color>
     <color name="ic_launcher_background">
         #FFB800</color>
+    <color name="notification_color">#8B1A1A</color>
 </resources>

@@ -23,7 +23,7 @@ void notificationTapBackground(NotificationResponse notificationResponse) {
 }
 
 var androidDetails = const AndroidNotificationDetails(
-  '54321',
+  'high_importance_channel',
   'normal_notification',
   enableVibration: true,
   enableLights: true,
@@ -49,6 +49,17 @@ var iosInit = const DarwinInitializationSettings(
 var initSetting = InitializationSettings(android: androiInit, iOS: iosInit);
 
 Future<void> initMessaging() async {
+  const AndroidNotificationChannel channel = AndroidNotificationChannel(
+    'high_importance_channel',
+    'high_importance_channel',
+    importance: Importance.high,
+    playSound: true,
+    enableVibration: true,
+  );
+  await fltNotification
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      ?.createNotificationChannel(channel);
+
   await fltNotification.initialize(settings: initSetting,
     onDidReceiveNotificationResponse: notificationTapBackground,
     onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
@@ -114,7 +125,7 @@ Future<void> _showBigPictureNotificationURLGeneral(message) async {
     BigPictureStyleInformation(bigPicture);
     final AndroidNotificationDetails androidNotificationDetails =
     AndroidNotificationDetails(
-      'notification_1',
+      'high_importance_channel',
       'general image notification',
       channelDescription: 'general notification with image',
       styleInformation: bigPictureStyleInformation,
@@ -158,7 +169,7 @@ Future<void> _showGeneralNotification(message) async {
   latestNotification = message['message'];
   const AndroidNotificationDetails androidNotificationDetails =
   AndroidNotificationDetails(
-    'notification_1',
+    'high_importance_channel',
     'general notification',
     channelDescription: 'general notification',
     enableVibration: true,
@@ -183,7 +194,7 @@ Future<void> _showGeneralNotification(message) async {
 Future<void> _showRideNotification(message) async {
   const AndroidNotificationDetails androidNotificationDetails =
   AndroidNotificationDetails(
-    'notification_1',
+    'high_importance_channel',
     'ride notification',
     channelDescription: 'ride notification',
     enableVibration: true,

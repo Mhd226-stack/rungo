@@ -37,7 +37,7 @@ void main() async {
   initMessaging();
 
   await SharedPreferences.getInstance().then((value) {
-    bool savedTheme = value.getBool('isDarkTheme') ?? false;
+    bool savedTheme = value.getBool('isDarkTheme') ?? true;
     setTheme(savedTheme);
     themeNotifier.value = savedTheme;
   });

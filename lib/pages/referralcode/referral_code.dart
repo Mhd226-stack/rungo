@@ -5,7 +5,7 @@ import '../../styles/styles.dart';
 import '../../translations/translation.dart';
 import '../../widgets/widgets.dart';
 import '../loadingPage/loading.dart';
-import '../onTripPage/map_page.dart';
+import '../homePage/home_page.dart';
 
 class Referral extends StatefulWidget {
   const Referral({Key? key}) : super(key: key);
@@ -30,7 +30,7 @@ class _ReferralState extends State<Referral> {
   //navigate
   navigate() {
     Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => const Maps()));
+        context, MaterialPageRoute(builder: (context) => const RungoHomePage()));
   }
 
   @override
@@ -124,7 +124,7 @@ class _ReferralState extends State<Referral> {
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const Maps()));
+                                      builder: (context) => const RungoHomePage()));
                               // } else {
                               //   setState(() {
                               //     _error = languages[choosenLanguage]
