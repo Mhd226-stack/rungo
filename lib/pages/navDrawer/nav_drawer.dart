@@ -611,14 +611,6 @@ class _NavDrawerState extends State<NavDrawer> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Appel
-                              NavMenu(
-                                onTap: () => makingPhoneCall(
-                                    userDetails['contact_us_mobile1']),
-                                text: 'Appel assistance',
-                                icon: Icons.call,
-                                isSos: true,
-                              ),
                               // WhatsApp
                               NavMenu(
                                 onTap: () async {
@@ -632,16 +624,69 @@ class _NavDrawerState extends State<NavDrawer> {
                                             content: Text("WhatsApp non installé")));
                                   }
                                 },
-                                text: 'WhatsApp assistance',
+                                text: 'WhatsApp',
                                 icon: Icons.message_rounded,
                                 isSos: true,
                               ),
-                              // Urgence
-                              NavMenu(
-                                onTap: () => makingPhoneCall('000'),
-                                text: 'Urgence',
-                                icon: Icons.emergency_rounded,
-                                isSos: true,
+                              // Réseaux sociaux
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: Responsive.width(4, context),
+                                  vertical: Responsive.height(1.5, context),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    // Facebook
+                                    InkWell(
+                                      onTap: () async {
+                                        const url = 'https://www.facebook.com/share/1BV6eUru7i/';
+                                        if (await canLaunch(url)) await launch(url);
+                                      },
+                                      child: Image.asset(
+                                        'assets/images/facebook.png',
+                                        width: media.width * 0.07,
+                                        height: media.width * 0.07,
+                                      ),
+                                    ),
+                                    // TikTok
+                                    InkWell(
+                                      onTap: () async {
+                                        const url = 'https://www.tiktok.com/@rungobf?_r=1&_t=ZN-979VIqyVZLi';
+                                        if (await canLaunch(url)) await launch(url);
+                                      },
+                                      child: Image.asset(
+                                        'assets/images/tiktok.png',
+                                        width: media.width * 0.07,
+                                        height: media.width * 0.07,
+                                      ),
+                                    ),
+                                    // Instagram
+                                    InkWell(
+                                      onTap: () async {
+                                        const url = 'https://www.instagram.com/run.go226?igsh=Nm5yZGI0YnJoMjJn';
+                                        if (await canLaunch(url)) await launch(url);
+                                      },
+                                      child: Image.asset(
+                                        'assets/images/instagram.png',
+                                        width: media.width * 0.07,
+                                        height: media.width * 0.07,
+                                      ),
+                                    ),
+                                    // YouTube
+                                    InkWell(
+                                      onTap: () async {
+                                        const url = 'https://www.youtube.com/@RungoBurkina';
+                                        if (await canLaunch(url)) await launch(url);
+                                      },
+                                      child: Image.asset(
+                                        'assets/images/youtube.png',
+                                        width: media.width * 0.07,
+                                        height: media.width * 0.07,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ],
                           ),
