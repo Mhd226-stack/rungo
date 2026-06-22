@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_user/common/responsive.dart';
 import 'package:http/http.dart' as http;
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:image_picker/image_picker.dart';
@@ -4271,4 +4272,45 @@ class ButtonBottomSpace extends StatelessWidget {
 String getFirstName(String fullName) {
   List<String> names = fullName.split(' ');
   return names.isNotEmpty ? names[0] : '';
+}
+
+
+
+signInWithGoogle() async {
+  dynamic result;
+  try {
+    final googleSignIn = GoogleSignIn(
+      serverClientId: '698998642807-ouhn7cjdd2tnush2k9jf1dvee7623ade.apps.googleusercontent.com',
+    );
+    await googleSignIn.signOut();
+    final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+    if (googleUser == null) {
+      result = 'cancelled';
+      return result;
+    }
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    await FirebaseAuth.instance.signInWithCredential(credential);
+    isfromomobile = false;
+    email = googleUser.email;
+    name = googleUser.displayName ?? '';
+    value = 1;
+    var loginResult = await userLoginWithEmail(email);
+    debugPrint('userLogin result: ' + loginResult.toString());
+    if (loginResult == true) {
+      var uCheck = await getUserDetails();
+      result = uCheck;
+    } else {
+      isfromomobile = false;
+      isLoginemail = false;
+      result = false;
+    }
+  } catch (e) {
+    result = e.toString();
+    debugPrint('Google Sign In error: ' + e.toString());
+  }
+  return result;
 }

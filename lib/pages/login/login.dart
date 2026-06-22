@@ -13,6 +13,7 @@ import '../noInternet/nointernet.dart';
 import 'agreement.dart';
 import 'namepage.dart';
 import 'otp_page.dart';
+import '../onTripPage/map_page.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -106,7 +107,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(height: media.height * 0.09),
+                          SizedBox(height: media.height * 0.03),
                           if (currentPage != 0)
                             InkWell(
                                 onTap: () {
@@ -157,12 +158,21 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                         SizedBox(
                                           height: Responsive.height(5, context),
                                         ),
+                                        Image.asset(
+                                          'assets/images/no_ride.png',
+                                          width: Responsive.width(60, context),
+                                          height: Responsive.height(25, context),
+                                          fit: BoxFit.contain,
+                                        ),
+                                        SizedBox(
+                                          height: Responsive.height(2, context),
+                                        ),
                                         MyText(
-                                          text: languages[choosenLanguage]
-                                              ['text_what_mobilenum'],
+                                          text: languages[choosenLanguage]['text_what_mobilenum'],
                                           size: 25,
                                           fontweight: FontWeight.w600,
                                           color: white,
+                                          textAlign: TextAlign.center,
                                         ),
                                         SizedBox(
                                           height: media.height * 0.065,
@@ -542,72 +552,50 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                           height:
                                               Responsive.height(2.5, context),
                                         ),
-                                        (isemailmodule == '1')
-                                            ? InkWell(
-                                                onTap: () {
-                                                  controller.clear();
-                                                  if (isLoginemail == false) {
-                                                    setState(() {
-                                                      _error = '';
-                                                      isLoginemail = true;
-                                                    });
-                                                  } else {
-                                                    setState(() {
-                                                      _error = '';
-                                                      isLoginemail = false;
-                                                    });
-                                                  }
-                                                },
-                                                child: Container(
-                                                  alignment: Alignment.center,
-                                                  width: Responsive.width(
-                                                      90, context),
-                                                  height: media.width * 0.12,
-                                                  decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                          color:
-                                                              darkModeBorderColor),
-                                                      color:
-                                                          darkModeSecContainer,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              15)),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Icon(
-                                                        Icons.email,
-                                                        color:
-                                                            Color(0xffFBFBFB),
-                                                        size: 20,
-                                                      ),
-                                                      SizedBox(
-                                                        width: 10,
-                                                      ),
-                                                      Text(
-                                                        languages[choosenLanguage]
-                                                                [
-                                                                'text_continue_with'] +
-                                                            ' ' +
-                                                            languages[
-                                                                    choosenLanguage]
-                                                                ['text_email'],
-                                                        style:
-                                                            GoogleFonts.inter(
-                                                          color: textColor
-                                                              .withOpacity(0.7),
-                                                          fontSize: 15,
-                                                          fontWeight:
-                                                              FontWeight.w500,
-                                                        ),
-                                                      ),
-                                                    ],
+                                        InkWell(
+                                          onTap: () async {
+                                            setState(() { loginLoading = true; });
+                                            var result = await signInWithGoogle();
+                                            if (result == true) {
+                                              await getUserDetails();
+                                              Navigator.pushAndRemoveUntil(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => const Maps()),
+                                                    (route) => false,
+                                              );
+                                            } else if (result == false) {
+                                              setState(() { currentPage = 2; });
+                                            } else if (result != 'cancelled') {
+                                              setState(() { _error = result.toString(); });
+                                            }
+                                            setState(() { loginLoading = false; });
+                                          },
+                                          child: Container(
+                                            alignment: Alignment.center,
+                                            width: Responsive.width(90, context),
+                                            height: media.width * 0.12,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(color: darkModeBorderColor),
+                                              color: darkModeSecContainer,
+                                              borderRadius: BorderRadius.circular(15),
+                                            ),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                Image.asset('assets/images/google.png', width: 24, height: 24),
+                                                SizedBox(width: 10),
+                                                Text(
+                                                  'Continuer avec Google',
+                                                  style: GoogleFonts.inter(
+                                                    color: textColor.withOpacity(0.7),
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
-                                              )
-                                            : Container(),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
                                         SizedBox(
                                           height: media.height * 0.03,
                                         ),
