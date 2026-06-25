@@ -22,6 +22,8 @@ import '../NavigatorPages/walletpage.dart';
 import '../onTripPage/map_page.dart';
 import '../login/login.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class NavDrawer extends StatefulWidget {
   const NavDrawer({Key? key}) : super(key: key);
@@ -36,6 +38,97 @@ class _NavDrawerState extends State<NavDrawer> {
     await getDetailsOfDevice();
     pref.setBool('isDarkTheme', isDarkTheme);
     valueNotifierHome.incrementNotifier();
+  }
+
+  // ─────────────────────────────────────────────
+  // Soft Delete — marque le compte comme supprimé
+  // ─────────────────────────────────────────────
+  Future<void> softDeleteAccount() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    try {
+      // 1. Soft delete dans Firestore
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uid)
+          .update({
+        'isDeleted': true,
+        'deletedAt': FieldValue.serverTimestamp(),
+      });
+
+      // 2. Supprimer de Firebase Auth
+      await user.delete();
+
+      // 3. Rediriger vers la page de connexion
+      userDetails.clear();
+      if (mounted) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const Login()),
+              (route) => false,
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'requires-recent-login') {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Veuillez vous reconnecter avant de supprimer votre compte'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Erreur : ${e.message}'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    }
+  }
+
+  // ─────────────────────────────────────────────
+  // Dialog de confirmation avant suppression
+  // ─────────────────────────────────────────────
+  void _showDeleteAccountDialog() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        backgroundColor: page,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          languages[choosenLanguage]['text_delete_account'] ?? 'Supprimer le compte',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: textColor, fontWeight: FontWeight.w600),
+        ),
+        content: Text(
+          'Cette action est irréversible. Votre compte sera définitivement supprimé.',
+          textAlign: TextAlign.center,
+          style: TextStyle(color: textColor.withOpacity(0.7)),
+        ),
+        actions: [
+          // Annuler
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: Text(
+              languages[choosenLanguage]['text_cancel'] ?? 'Annuler',
+              style: TextStyle(color: textColor),
+            ),
+          ),
+          // Confirmer suppression
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(ctx);
+              await softDeleteAccount();
+            },
+            child: Text(
+              languages[choosenLanguage]['text_confirm'] ?? 'Confirmer',
+              style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w700),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
@@ -490,6 +583,15 @@ class _NavDrawerState extends State<NavDrawer> {
                                         //       ['text_delete_account'],
                                         //   icon: Icons.delete,
                                         // ),
+                                        NavMenu(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                            _showDeleteAccountDialog();
+                                          },
+                                          text: languages[choosenLanguage]
+                                          ['text_delete_account'] ?? 'Supprimer le compte',
+                                          icon: Icons.delete_outline,
+                                        ),
 
                                         // Container(
                                         //   padding: EdgeInsets.only(
@@ -609,7 +711,7 @@ class _NavDrawerState extends State<NavDrawer> {
                         Padding(
                           padding: EdgeInsets.only(top: media.width * 0.025),
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               // WhatsApp
                               NavMenu(

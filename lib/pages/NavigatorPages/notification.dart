@@ -86,12 +86,12 @@ class _NotificationPageState extends State<NotificationPage> {
                             children: [
                               Container(
                                 padding:
-                                    EdgeInsets.only(bottom: media.width * 0.05),
+                                EdgeInsets.only(bottom: media.width * 0.05),
                                 width: media.width,
                                 alignment: Alignment.center,
                                 child: MyText(
                                   text: languages[choosenLanguage]
-                                      ['text_notification'],
+                                  ['text_notification'],
                                   size: media.width * twentythree,
                                   fontweight: FontWeight.w700,
                                 ),
@@ -110,7 +110,6 @@ class _NotificationPageState extends State<NotificationPage> {
                               physics: const BouncingScrollPhysics(),
                               child: Column(
                                 children: [
-                                  // Wallet history
                                   if (notificationHistory.isNotEmpty)
                                     Column(
                                       children: [
@@ -118,204 +117,187 @@ class _NotificationPageState extends State<NotificationPage> {
                                           children: notificationHistory
                                               .asMap()
                                               .map((i, value) {
-                                                return MapEntry(
-                                                  i,
-                                                  Stack(
-                                                    alignment:
-                                                        Alignment.bottomRight,
-                                                    children: [
-                                                      InkWell(
-                                                        onTap: () {
-
-                                                          setState(() {
-                                                            showinfovalue = i;
-                                                            showinfo = true;
-                                                          });
-                                                        },
-                                                        child: Container(
-                                                          margin: EdgeInsets.only(
-                                                              top: media.width *
-                                                                  0.02,
-                                                              bottom:
-                                                                  media.width *
-                                                                      0.02),
-                                                          width:
-                                                              media.width * 0.9,
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  media.width *
-                                                                      0.025),
-                                                          decoration: BoxDecoration(
-                                                              border: Border.all(
-                                                                  color: white
-                                                                      .withOpacity(
-                                                                          0.3),
-                                                                  width: 1.2),
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          12),
-                                                              color: page),
-                                                          child: Column(
+                                            return MapEntry(
+                                              i,
+                                              Stack(
+                                                alignment:
+                                                Alignment.bottomRight,
+                                                children: [
+                                                  InkWell(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        showinfovalue = i;
+                                                        showinfo = true;
+                                                      });
+                                                    },
+                                                    child: Container(
+                                                      margin: EdgeInsets.only(
+                                                          top: media.width *
+                                                              0.02,
+                                                          bottom:
+                                                          media.width *
+                                                              0.02),
+                                                      width:
+                                                      media.width * 0.9,
+                                                      padding:
+                                                      EdgeInsets.all(
+                                                          media.width *
+                                                              0.025),
+                                                      decoration: BoxDecoration(
+                                                          border: Border.all(
+                                                              color: white
+                                                                  .withOpacity(
+                                                                  0.3),
+                                                              width: 1.2),
+                                                          borderRadius:
+                                                          BorderRadius
+                                                              .circular(
+                                                              12),
+                                                          color: page),
+                                                      child: Column(
+                                                        children: [
+                                                          Row(
                                                             children: [
-                                                              Row(
+                                                              Container(
+                                                                  height:
+                                                                  media.width *
+                                                                      0.1,
+                                                                  width: media
+                                                                      .width *
+                                                                      0.1,
+                                                                  decoration: BoxDecoration(
+                                                                      shape: BoxShape
+                                                                          .circle,
+                                                                      color: white.withOpacity(
+                                                                          0.22)),
+                                                                  alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                                  child: const Icon(
+                                                                      Icons
+                                                                          .notifications)),
+                                                              SizedBox(
+                                                                width: media
+                                                                    .width *
+                                                                    0.025,
+                                                              ),
+                                                              Column(
+                                                                crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
                                                                 children: [
-                                                                  Container(
-                                                                      height:
-                                                                          media.width *
-                                                                              0.1,
-                                                                      width: media
-                                                                              .width *
-                                                                          0.1,
-                                                                      decoration: BoxDecoration(
-                                                                          shape: BoxShape
-                                                                              .circle,
-                                                                          color: white.withOpacity(
-                                                                              0.22)),
-                                                                      alignment:
-                                                                          Alignment
-                                                                              .center,
-                                                                      child: const Icon(
-                                                                          Icons
-                                                                              .notifications)),
-                                                                  SizedBox(
-                                                                    width: media
-                                                                            .width *
-                                                                        0.025,
-                                                                  ),
-                                                                  Column(
-                                                                    crossAxisAlignment:
-                                                                        CrossAxisAlignment
-                                                                            .start,
+                                                                  Row(
+                                                                    mainAxisAlignment:
+                                                                    MainAxisAlignment.spaceBetween,
                                                                     children: [
-                                                                      Row(
-                                                                        mainAxisAlignment:
-                                                                            MainAxisAlignment.spaceBetween,
+                                                                      SizedBox(
+                                                                        width:
+                                                                        media.width * 0.38,
+                                                                        child:
+                                                                        Text(
+                                                                          notificationHistory[i]['title'].toString(),
+                                                                          overflow: TextOverflow.ellipsis,
+                                                                          style: GoogleFonts.inter(fontSize: media.width * sixteen, color: textColor, fontWeight: FontWeight.w500),
+                                                                        ),
+                                                                      ),
+                                                                      Column(
                                                                         children: [
                                                                           SizedBox(
-                                                                            width:
-                                                                                media.width * 0.38,
-                                                                            child:
-                                                                                Text(
-                                                                              notificationHistory[i]['title'].toString(),
+                                                                            width: media.width * 0.3,
+                                                                            child: Text(
+                                                                              notificationHistory[i]['converted_created_at'].toString(),
                                                                               overflow: TextOverflow.ellipsis,
-                                                                              style: GoogleFonts.inter(fontSize: media.width * sixteen, color: textColor, fontWeight: FontWeight.w500),
+                                                                              style: GoogleFonts.inter(fontSize: media.width * twelve, color: white.withOpacity(0.58), fontWeight: FontWeight.w400),
                                                                             ),
-                                                                          ),
-                                                                          Column(
-                                                                            children: [
-                                                                              SizedBox(
-                                                                                width: media.width * 0.3,
-                                                                                child: Text(
-                                                                                  notificationHistory[i]['converted_created_at'].toString(),
-                                                                                  overflow: TextOverflow.ellipsis,
-                                                                                  style: GoogleFonts.inter(fontSize: media.width * twelve, color: white.withOpacity(0.58), fontWeight: FontWeight.w400),
-                                                                                ),
-                                                                              ),
-                                                                            ],
                                                                           ),
                                                                         ],
                                                                       ),
-                                                                      SizedBox(
-                                                                        width: media.width *
-                                                                            0.55,
-                                                                        child:
-                                                                            Text(
-                                                                          notificationHistory[i]['body']
-                                                                              .toString(),
-                                                                          overflow:
-                                                                              TextOverflow.ellipsis,
-                                                                          style:
-                                                                              GoogleFonts.inter(
-                                                                            fontSize:
-                                                                                media.width * twelve,
-                                                                            color:
-                                                                                hintColor,
-                                                                          ),
-                                                                        ),
-                                                                      ),
                                                                     ],
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: media.width *
+                                                                        0.55,
+                                                                    child:
+                                                                    Text(
+                                                                      notificationHistory[i]['body']
+                                                                          .toString(),
+                                                                      overflow:
+                                                                      TextOverflow.ellipsis,
+                                                                      style:
+                                                                      GoogleFonts.inter(
+                                                                        fontSize:
+                                                                        media.width * twelve,
+                                                                        color:
+                                                                        hintColor,
+                                                                      ),
+                                                                    ),
                                                                   ),
                                                                 ],
                                                               ),
-                                                              SizedBox(
-                                                                height: media
-                                                                        .width *
-                                                                    0.02,
-                                                              ),
-                                                              if (notificationHistory[
-                                                                          i][
-                                                                      'image'] !=
-                                                                  null)
-                                                                Container(
-                                                                  height: media
-                                                                          .width *
-                                                                      0.1,
-                                                                  width: media
-                                                                          .width *
-                                                                      0.6,
-                                                                  decoration: BoxDecoration(
-                                                                    borderRadius: BorderRadius.circular(10),
-                                                                    border: Border.all(color: white.withOpacity(0.2)),
-                                                                    image: (notificationHistory[i]['image'] != null &&
-                                                                        notificationHistory[i]['image'].toString().isNotEmpty)
-                                                                        ? DecorationImage(
-                                                                        fit: BoxFit.cover,
-                                                                        image: NetworkImage(
-                                                                          notificationHistory[i]['image'],
-                                                                        ))
-                                                                        : null,
-                                                                  )
-                                                                )
                                                             ],
                                                           ),
-                                                        ),
+                                                          SizedBox(
+                                                            height: media
+                                                                .width *
+                                                                0.02,
+                                                          ),
+                                                          if (notificationHistory[i]['image'] != null &&
+                                                              notificationHistory[i]['image'].toString().isNotEmpty &&
+                                                              !notificationHistory[i]['image'].toString().endsWith('/'))
+                                                            Container(
+                                                              height: media.width * 0.1,
+                                                              width: media.width * 0.6,
+                                                              decoration: BoxDecoration(
+                                                                borderRadius: BorderRadius.circular(10),
+                                                                border: Border.all(color: white.withOpacity(0.2)),
+                                                                image: DecorationImage(
+                                                                  fit: BoxFit.cover,
+                                                                  image: NetworkImage(
+                                                                    notificationHistory[i]['image'],
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            )
+                                                        ],
                                                       ),
-                                                      Positioned(
-                                                        bottom: 10,
-                                                        child: Container(
-                                                            alignment: Alignment
-                                                                .centerRight,
-                                                            width: media.width *
-                                                                0.15,
-                                                            child: IconButton(
-                                                              onPressed: () {
-                                                                setState(() {
-                                                                  error = true;
-                                                                  notificationid =
-                                                                      notificationHistory[
-                                                                              i]
-                                                                          [
-                                                                          'id'];
-                                                                });
-                                                              },
-                                                              icon: const Icon(
-                                                                  Icons.delete),
-                                                            )),
-                                                      )
-                                                    ],
+                                                    ),
                                                   ),
-                                                );
-                                              })
+                                                  Positioned(
+                                                    bottom: 10,
+                                                    child: Container(
+                                                        alignment: Alignment
+                                                            .centerRight,
+                                                        width: media.width *
+                                                            0.15,
+                                                        child: IconButton(
+                                                          onPressed: () {
+                                                            setState(() {
+                                                              error = true;
+                                                              notificationid =
+                                                              notificationHistory[i]['id'];
+                                                            });
+                                                          },
+                                                          icon: const Icon(
+                                                              Icons.delete),
+                                                        )),
+                                                  )
+                                                ],
+                                              ),
+                                            );
+                                          })
                                               .values
                                               .toList(),
                                         ),
-                                        if (notificationHistoryPage[
-                                                'pagination'] !=
-                                            null)
-                                          if (notificationHistoryPage[
-                                                      'pagination']
-                                                  ['current_page'] <
-                                              notificationHistoryPage[
-                                                  'pagination']['total_pages'])
+                                        if (notificationHistoryPage['pagination'] != null)
+                                          if (notificationHistoryPage['pagination']['current_page'] <
+                                              notificationHistoryPage['pagination']['total_pages'])
                                             InkWell(
                                               onTap: () async {
                                                 setState(() {
                                                   isLoading = true;
                                                 });
-                                                var val =
-                                                    await getNotificationPages(
-                                                        'page=${notificationHistoryPage['pagination']['current_page'] + 1}');
+                                                var val = await getNotificationPages(
+                                                    'page=${notificationHistoryPage['pagination']['current_page'] + 1}');
                                                 if (val == 'logout') {
                                                   navigateLogout();
                                                 }
@@ -330,18 +312,17 @@ class _NotificationPageState extends State<NotificationPage> {
                                                     bottom: media.width * 0.05),
                                                 decoration: BoxDecoration(
                                                     borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
+                                                    BorderRadius.circular(10),
                                                     color: page,
                                                     border: Border.all(
                                                         color: borderLines,
                                                         width: 1.2)),
                                                 child: Text(
                                                   languages[choosenLanguage]
-                                                      ['text_loadmore'],
+                                                  ['text_loadmore'],
                                                   style: GoogleFonts.inter(
                                                       fontSize:
-                                                          media.width * sixteen,
+                                                      media.width * sixteen,
                                                       color: textColor),
                                                 ),
                                               ),
@@ -351,7 +332,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                   else
                                     Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       children: [
                                         SizedBox(
                                           height: media.width * 0.3,
@@ -373,7 +354,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                           width: media.width * 0.8,
                                           child: MyText(
                                               text: languages[choosenLanguage][
-                                                  'text_no_notification_found'],
+                                              'text_no_notification_found'],
                                               textAlign: TextAlign.center,
                                               fontweight: FontWeight.w600,
                                               size: media.width * sixteen),
@@ -387,6 +368,8 @@ class _NotificationPageState extends State<NotificationPage> {
                         ],
                       ),
                     ),
+
+                    // ── Popup showinfo ──────────────────────────────────────
                     if (showinfo == true)
                       Positioned(
                           top: 0,
@@ -400,60 +383,49 @@ class _NotificationPageState extends State<NotificationPage> {
                                 Stack(
                                   children: [
                                     Container(
-                                      padding:
-                                          EdgeInsets.all(media.width * 0.05),
+                                      padding: EdgeInsets.all(media.width * 0.05),
                                       width: media.width * 0.9,
+                                      constraints: BoxConstraints(
+                                          maxHeight: media.height * 0.75), // ← AJOUT
                                       decoration: BoxDecoration(
                                           border: Border.all(
                                               color: white.withOpacity(0.3)),
-                                          borderRadius:
-                                              BorderRadius.circular(30),
+                                          borderRadius: BorderRadius.circular(30),
                                           color: darkModeDialogColor),
-                                      child: Column(
-                                        children: [
-                                          MyText(
-                                            text: notificationHistory[
-                                                    showinfovalue!]['title']
-                                                .toString(),
-                                            size: media.width * twentyfour,
-                                            fontweight: FontWeight.w600,
-                                          ),
-                                          SizedBox(
-                                            height: media.width * 0.02,
-                                          ),
-                                          MyText(
-                                            text: notificationHistory[
-                                                    showinfovalue!]['body']
-                                                .toString(),
-                                            size: media.width * seventeen,
-                                            color: Color(0xff7B7B7B),
-                                          ),
-                                          SizedBox(
-                                            height: media.width * 0.05,
-                                          ),
-                                          if (notificationHistory[
-                                                  showinfovalue!]['image'] !=
-                                              null)
-                                            Container(
-                                              height: media.width * 0.4,
-                                              width: media.width * 0.6,
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  border: Border.all(
-                                                      color: white
-                                                          .withOpacity(0.2)),
-                                                  image: DecorationImage(
-                                                      fit: BoxFit.cover,
-                                                      image: NetworkImage(
-                                                        notificationHistory[
-                                                                showinfovalue!]
-                                                            ['image'],
-                                                      ))),
-                                            )
-                                        ],
-                                      ),
-                                    ),
+                                      child: SingleChildScrollView( // ← AJOUT
+                                        child: Column(              // ← AJOUT
+                                          children: [
+                                            MyText(
+                                              text: notificationHistory[showinfovalue!]['title'].toString(),
+                                              size: media.width * twentyfour,
+                                              fontweight: FontWeight.w600,
+                                            ),
+                                            SizedBox(height: media.width * 0.02),
+                                            MyText(
+                                              text: notificationHistory[showinfovalue!]['body'].toString(),
+                                              size: media.width * seventeen,
+                                              color: Color(0xff7B7B7B),
+                                            ),
+                                            SizedBox(height: media.width * 0.05),
+                                            if (notificationHistory[showinfovalue!]['image'] != null &&
+                                                notificationHistory[showinfovalue!]['image'].toString().isNotEmpty &&
+                                                !notificationHistory[showinfovalue!]['image'].toString().endsWith('/'))
+                                              Container(
+                                                height: media.width * 0.4,
+                                                width: media.width * 0.6,
+                                                decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(10),
+                                                    border: Border.all(color: white.withOpacity(0.2)),
+                                                    image: DecorationImage(
+                                                        fit: BoxFit.cover,
+                                                        image: NetworkImage(
+                                                          notificationHistory[showinfovalue!]['image'],
+                                                        ))),
+                                              )
+                                          ],
+                                        ),       // ferme Column
+                                      ),         // ferme SingleChildScrollView
+                                    ),           // ferme Container
                                     Positioned(
                                       top: 15,
                                       right: 15,
@@ -471,6 +443,8 @@ class _NotificationPageState extends State<NotificationPage> {
                               ],
                             ),
                           )),
+
+                    // ── Popup error (suppression) ───────────────────────────
                     if (error == true)
                       Positioned(
                           top: 0,
@@ -484,78 +458,67 @@ class _NotificationPageState extends State<NotificationPage> {
                                 Container(
                                   padding: EdgeInsets.all(media.width * 0.05),
                                   width: media.width * 0.9,
+                                  constraints: BoxConstraints(maxHeight: media.height * 0.75),
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(30),
-                                      border: Border.all(
-                                          color: white.withOpacity(0.3)),
+                                      border: Border.all(color: white.withOpacity(0.3)),
                                       color: darkModeDialogColor),
-                                  child: Column(
-                                    children: [
-                                      MyText(
-                                        text: languages[choosenLanguage]
-                                            ['text_delete_notification'],
-                                        size: media.width * sixteen,
-                                        textAlign: TextAlign.center,
-                                        fontweight: FontWeight.w600,
-                                      ),
-                                      SizedBox(
-                                        height: media.width * 0.05,
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          Button(
-                                              onTap: () async {
-                                                setState(() {
-                                                  error = false;
-                                                  notificationid = null;
-                                                });
-                                              },
-                                              borderRadius: 3000.0,
-                                              width:
-                                                  Responsive.width(20, context),
-                                              color: darkModeSecContainer,
-                                              borcolor: white.withOpacity(0.2),
-                                              height:
-                                                  Responsive.height(5, context),
-                                              text: languages[choosenLanguage]
-                                                  ['text_no']),
-                                          SizedBox(
-                                            width: media.width * 0.03,
-                                          ),
-                                          Button(
-                                              onTap: () async {
-                                                setState(() {
-                                                  isLoading = true;
-                                                });
-                                                var result =
-                                                    await deleteNotification(
-                                                        notificationid);
-                                                if (result == 'success') {
+                                  child: SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        MyText(
+                                          text: languages[choosenLanguage]['text_delete_notification'],
+                                          size: media.width * sixteen,
+                                          textAlign: TextAlign.center,
+                                          fontweight: FontWeight.w600,
+                                        ),
+                                        SizedBox(height: media.width * 0.05),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            Button(
+                                                onTap: () async {
                                                   setState(() {
-                                                    getdata();
                                                     error = false;
-                                                    isLoading = false;
-                                                    showToast();
+                                                    notificationid = null;
                                                   });
-                                                }
-                                              },
-                                              width:
-                                                  Responsive.width(20, context),
-                                              borderRadius: 3000.0,
-                                              height:
-                                                  Responsive.height(5, context),
-                                              text: languages[choosenLanguage]
-                                                  ['text_yes']),
-                                        ],
-                                      )
-                                    ],
+                                                },
+                                                borderRadius: 3000.0,
+                                                width: Responsive.width(20, context),
+                                                color: darkModeSecContainer,
+                                                borcolor: white.withOpacity(0.2),
+                                                height: Responsive.height(5, context),
+                                                text: languages[choosenLanguage]['text_no']),
+                                            SizedBox(width: media.width * 0.03),
+                                            Button(
+                                                onTap: () async {
+                                                  setState(() {
+                                                    isLoading = true;
+                                                  });
+                                                  var result = await deleteNotification(notificationid);
+                                                  if (result == 'success') {
+                                                    setState(() {
+                                                      getdata();
+                                                      error = false;
+                                                      isLoading = false;
+                                                      showToast();
+                                                    });
+                                                  }
+                                                },
+                                                width: Responsive.width(20, context),
+                                                borderRadius: 3000.0,
+                                                height: Responsive.height(5, context),
+                                                text: languages[choosenLanguage]['text_yes']),
+                                          ],
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 )
                               ],
                             ),
                           )),
+
                     if (isLoading == true)
                       const Positioned(top: 0, child: Loading())
                     else
@@ -572,8 +535,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                 borderRadius: BorderRadius.circular(10),
                                 color: Colors.transparent.withOpacity(0.6)),
                             child: MyText(
-                              text: languages[choosenLanguage]
-                                  ['text_notification_deleted'],
+                              text: languages[choosenLanguage]['text_notification_deleted'],
                               size: media.width * twelve,
                               color: topBar,
                             ),

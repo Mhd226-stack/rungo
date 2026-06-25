@@ -74,6 +74,12 @@ Set<Polyline> sourceToDestPolylines = {};
 
 class _BookingConfirmationState extends State<BookingConfirmation>
     with WidgetsBindingObserver, TickerProviderStateMixin {
+  String _formatPhone(String phone) {
+    if (phone.startsWith('+226') && phone.length > 4) {
+      return '+226 ' + phone.substring(4);
+    }
+    return phone;
+  }
   Stream<DatabaseEvent>? _driverStream;
   String? _lastDriverId;
   TextEditingController promoKey = TextEditingController();
@@ -3615,25 +3621,14 @@ class _BookingConfirmationState extends State<BookingConfirmation>
                                                         child: Image(
                                                             fit: BoxFit.fill,
                                                             width: Responsive
-                                                                .width(55,
+                                                                .width(35,
                                                                     context),
                                                             height: Responsive
-                                                                .height(25,
+                                                                .height(18,
                                                                     context),
-                                                            image: AssetImage(
-                                                              'assets/images/car_info_bg.png',
+                                                            image: NetworkImage(
+                                                              etaDetails[_showInfoInt]['icon'] ?? '',
                                                             ))),
-                                                    // Positioned(
-                                                    //     right: 0,
-                                                    //     child: Image(
-                                                    //         width: Responsive
-                                                    //             .width(45,
-                                                    //                 context),
-                                                    //         height: Responsive
-                                                    //             .height(15,
-                                                    //                 context),
-                                                    //         image: NetworkImage(
-                                                    //            etaDetails[i]['icon'])))
                                                   ],
                                                 )
                                               ],
@@ -5206,7 +5201,7 @@ class _BookingConfirmationState extends State<BookingConfirmation>
                                                                   Icon(Icons.phone, size: 12, color: Color(0xff929292)),
                                                                   SizedBox(width: 4),
                                                                   MyText(
-                                                                    text: userRequestData['driverDetail']['data']['mobile'].toString(),
+                                                                    text: _formatPhone(userRequestData['driverDetail']['data']['mobile'].toString()),
                                                                     size: 12,
                                                                     fontweight: FontWeight.w400,
                                                                     color: Color(0xff929292),
@@ -5566,7 +5561,7 @@ class _BookingConfirmationState extends State<BookingConfirmation>
                                                                 SizedBox(
                                                                   height: media
                                                                           .width *
-                                                                      0.05,
+                                                                      0.01,
                                                                 ),
                                                                 Row(
                                                                   mainAxisAlignment:

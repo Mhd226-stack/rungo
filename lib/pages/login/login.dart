@@ -14,6 +14,7 @@ import 'agreement.dart';
 import 'namepage.dart';
 import 'otp_page.dart';
 import '../onTripPage/map_page.dart';
+import '../homePage/home_page.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -560,7 +561,7 @@ class _LoginState extends State<Login> with TickerProviderStateMixin {
                                               await getUserDetails();
                                               Navigator.pushAndRemoveUntil(
                                                 context,
-                                                MaterialPageRoute(builder: (context) => const Maps()),
+                                                MaterialPageRoute(builder: (context) => const RungoHomePage()),
                                                     (route) => false,
                                               );
                                             } else if (result == false) {
